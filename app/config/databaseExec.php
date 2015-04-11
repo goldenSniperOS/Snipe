@@ -9,8 +9,8 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 	if($data['database_activate'] == 'true')
 	{	
 		$capsule->addConnection($data['mysql']);
+		$capsule->setAsGlobal();
+		$capsule->bootEloquent();
 	}
 
-	$capsule->setAsGlobal();
-
-	$capsule->bootEloquent();
+	
