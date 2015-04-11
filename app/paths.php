@@ -18,6 +18,17 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
+	| Config Path
+	|--------------------------------------------------------------------------
+	| 
+	| Aqui se toma la ruta a la carpeta de Configuracion del Proyecto
+	| 
+	*/
+
+	'config' => rtrim(__FILE__,'paths.php').'/config',
+
+	/*
+	|--------------------------------------------------------------------------
 	| Public Path
 	|--------------------------------------------------------------------------
 	|
@@ -41,5 +52,7 @@ return array(
 	*/
 
 	'base' => 'http://'.$_SERVER['SERVER_NAME'].str_replace('public/index.php', '',$_SERVER['PHP_SELF'])
+
+
 );
 

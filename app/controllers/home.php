@@ -9,10 +9,8 @@ class Home extends Controller
 		if(empty($_SESSION['status']))
 		{
 			$_SESSION['status'] = '';		
-		}
-
-		$name = User::find(1)->username;
-		$this->view('home/index',['name' => $name,'status'=> $_SESSION['status']]);
+		}	
+		$this->view('home/index',['status'=> $_SESSION['status']]);
 		$_SESSION['status'] = '';
 	}
 

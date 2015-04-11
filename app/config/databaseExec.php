@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 	
-	$data = require __DIR__.'database.php';
+	$data = require_once __DIR__.'/database.php';
 	
 	$capsule = new Capsule();
 
