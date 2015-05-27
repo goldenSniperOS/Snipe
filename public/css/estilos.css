@@ -1,4 +1,26 @@
+@import url(http://fonts.googleapis.com/css?family=Indie+Flower);
+@import url(http://fonts.googleapis.com/css?family=Lobster);
 
-body{
-	background-color: green;
+.logo{
+	position: absolute;
+	top:0;
+	left:0;
+	bottom:0;
+	right:0;
+	margin: auto;
+	background-color: steelblue;
+	width: 100%;
+	
+	/*Texto*/
+	text-align: center;
+	color: #fff;
+	font-size: 2em;
+}
+
+.logo h2{
+	font-family: 'Indie Flower', cursive;
+}
+
+.logo h1{
+	font-family: 'Lobster', cursive;
 }

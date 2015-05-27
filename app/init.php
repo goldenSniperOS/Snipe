@@ -1,11 +1,14 @@
 <?php
-	//Composer Autoloader
+	spl_autoload_register(function($class){
+		require_once 'core/'.$class.'.php';
+	});
 
-	require_once '../vendor/autoload.php';
-	require_once 'config/databaseExec.php';
-	require_once 'core/HTML.php';
-	require_once 'core/URL.php';
-	require_once 'core/Controller.php';
-	require_once 'core/App.php';
+	if(Config::get('database_activate') == true){
+		spl_autoload_register(function($model){
+			require_once 'models/'.$model.'.php';
+		});	
+	}else{
+		echo '<p>No hay Conexion a la Base de Datos</p>';
+	}
 	
 	

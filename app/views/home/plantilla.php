@@ -2,16 +2,10 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Snipe Framework</title>
+	<title>Snipe Framework | Plantilla Ejemplo</title>
 	<?=HTML::style('css/estilos.css')?>
 </head>
 <body>
-	<div class="logo">
-		<h2>Bienvenidos a</h2>
-		<h1>SnipeFramework</h1>
-	</div>
+	<div class="logo"><h2>Hola Plantilla</h2></div>
 </body>
 </html>
-
-
-
