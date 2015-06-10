@@ -22,5 +22,9 @@
 			}
 			return '';
 		}
+
+		public static function all(){
+			return $_POST;
+		}
 	}
 ?>

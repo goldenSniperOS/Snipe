@@ -1,6 +1,5 @@
 <?php 
 	class DB{
-
 		private static $_instance = null;
 		private $_pdo, 
 				$_query, 
@@ -12,9 +11,13 @@
 			try{
 				$this->_pdo = new PDO(
 					'mysql:host='.Config::get('mysql/host').
-					';dbname='.Config::get('mysql/db'),
+					';dbname='.Config::get('mysql/database'),
 					Config::get('mysql/username'),
-					Config::get('mysql/password'));
+					Config::get('mysql/password'),
+					array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES  \'UTF8\''));
+					if(Config::get('database_errors')){
+						$this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);	
+					}
 					//echo 'Connected';
 			}catch(PDOException $e){
 				die($e->getMessage());
@@ -27,51 +30,66 @@
 			}
 			return self::$_instance;
 		}
-
 		public function query($sql,$params=array()){
 			$this_error = false;
-			if($this->_query = $this->_pdo->prepare($sql)){
-				$x = 1;
-				if(count($params)){
-					foreach ($params as $param) {
-						$this->_query->bindValue($x,$param);
-						$x++;
+			try{
+				if($this->_query = $this->_pdo->prepare($sql)){
+					$x = 1;
+					if(count($params)){
+						foreach ($params as $param) {
+							$this->_query->bindValue($x,$param);
+							$x++;
+						}
+					}
+					if($this->_query->execute()){
+						$this->_count = $this->_query->rowCount();
+						if($this->_query->columnCount()){
+							$this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);	
+						}
+					} else{
+						$this->_error = true;
 					}
 				}
-				if($this->_query->execute()){
-					$this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
-					$this->_count = $this->_query->rowCount();
-				} else{
-					$this->_error = true;
-				}
+			}catch(PDOException $e){
+				die($e->getMessage());
 			}
 			return $this;	
 		}
-
-		public function action($action,$table,$where = array()){
-			if(count($where) === 3){
+		public function action($action,$table,$wheres = array()){
+			if(!empty($wheres)){
 				$operators = array('=','>','<','>=','<=','<>');
-				$field 		= $where[0];
-				$operator 	= $where[1];
-				$value 		= $where[2];
-
-				if(in_array($operator,$operators)){
-					$sql = "{$action} FROM {$table} WHERE {$field} {$operator} ?";
-					if(!$this->query($sql,array($value))->error()){
-						return $this;
+				$sql = "{$action} FROM {$table} WHERE ";
+				$counter = 0;
+				$values;
+				foreach ($wheres as $where) {
+					$field 		= $where[0];
+					$operator 	= $where[1];
+					$value 		= $where[2];
+					if(in_array($operator,$operators)){
+						$counter++;
+						$sql .="{$field} {$operator} ? ";
+						if(count($wheres) > 1 && count($wheres) != $counter){
+							$sql .= " AND ";
+						}
+						$values[] = $value;
 					}
+				}
+				if(!$this->query($sql,$values)->error()){
+					return $this;
+				}
+			}else{
+				$sql = "{$action} FROM {$table}";
+				if(!$this->query($sql)->error()){
+					return $this;
 				}
 			}
 		}
-
 		public function first(){
 			return $this->results()[0];
 		}
-
 		public function get($table,$where){
 			return $this->action('SELECT *',$table,$where);
 		}
-
 		public function insert($table,$fields = array()){
 			try{
 				if(count($fields)){
@@ -86,48 +104,45 @@
 						$x++;
 					}
 					$sql = "INSERT INTO {$table}(`".implode('`, `',$keys)."`) VALUES({$values})";
-					
 					if(!$this->query($sql,$fields)->error()){
 						return true;
 					}
 				}
-			}catch(Exception $e){
-				throw $e;
+			}catch(PDOException $e){
+				die($e->getMessage());
 			}		
 			return false;
 		}
-
-		public function update($table,$id,$fields){
-				$set = '';
-				$x = 1;
-
-				foreach ($fields as $name => $value) {
-					$set .= $name.' = ?';
-					if($x < count($fields)){
-						$set .= ', ';
-					}
-					$x++;
+		public function update($table,$id,$fields,$pk){
+			$set = '';
+			$x = 1;
+			foreach ($fields as $name => $value) {
+				$set .= $name.' = ?';
+				if($x < count($fields)){
+					$set .= ', ';
 				}
-				$sql = "UPDATE {$table} SET {$set} WHERE id = {$id}";
-				
-				if(!$this->query($sql,$fields)->error()){
-					return true;
-				}
-				return false;
+				$x++;
+			}
+			if(is_numeric($id)){
+				$sql = "UPDATE {$table} SET {$set} WHERE {$pk} = {$id}";
+			}else{
+				$sql = "UPDATE {$table} SET {$set} WHERE {$pk} = '{$id}'";
+			}
+			
+			if(!$this->query($sql,$fields)->error()){
+				return true;
+			}
+			return false;
 		}
-
 		public function delete($table,$where){
-			return $this->action('DELETE *',$table,$where);
+			return $this->action('DELETE',$table,$where);
 		}
-
 		public function count(){
 			return $this->_count;
 		}
-
 		public function results(){
 			return $this->_results;
 		}
-
 		public function error(){
 			return $this->_error;
 		}

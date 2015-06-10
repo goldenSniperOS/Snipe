@@ -14,7 +14,7 @@ return array(
 	|
 	*/
 
-	'app' => rtrim(__FILE__,'/config/paths.php').'/app',
+	'app' => substr(__FILE__,0,strlen(__FILE__)-17),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -25,7 +25,7 @@ return array(
 	| 
 	*/
 
-	'config' => rtrim(__FILE__,'paths.php').'/config',
+	'config' => rtrim(__FILE__,'paths.php').DIRECTORY_SEPARATOR.'config',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -38,7 +38,7 @@ return array(
 	|
 	*/
 
-	'public' => 'http://'.$_SERVER['SERVER_NAME'].rtrim($_SERVER['PHP_SELF'],'index.php').'/public',
+	'public' => 'http://'.$_SERVER['SERVER_NAME'].rtrim($_SERVER['PHP_SELF'],'index.php').'public',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -51,7 +51,7 @@ return array(
 	|
 	*/
 
-	'base' => 'http://'.$_SERVER['SERVER_NAME'].str_replace('public/index.php', '',$_SERVER['PHP_SELF'])
+	'base' => 'http://'.$_SERVER['SERVER_NAME'].str_replace('/index.php', '',$_SERVER['PHP_SELF'])
 
 
 );

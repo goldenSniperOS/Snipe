@@ -1,8 +1,4 @@
 <?php
-
-/**
-* 
-*/
 class App
 {	
 	protected $controller = 'home';
@@ -12,28 +8,37 @@ class App
 	function __construct()
 	{
 		$url = $this->parseURL();
-
-		if(file_exists('app/controllers/'.$url[0].'.php'))
+		if(isset($url[0]))
 		{
-			$this->controller = $url[0];
-			unset($url[0]);
-			
-		}
-		require_once 'app/controllers/'.$this->controller.'.php';
-		
-		$this->controller = new $this->controller;
-
-		if(isset($url[1]))
-		{
-			if(method_exists($this->controller, $url[1]))
+			if(file_exists('app/controllers/'.$url[0].'.php'))
 			{
-				$this->method = $url[1];
-				unset($url[1]);				
+				$this->controller = $url[0];
+				unset($url[0]);			
+				require_once 'app/controllers/'.$this->controller.'.php';
+				$this->controller = new $this->controller;		
+				if(isset($url[1]))
+				{
+					if(method_exists($this->controller, $url[1]))
+					{
+						$this->method = $url[1];
+						unset($url[1]);				
+					}else{
+						echo "Página no Encontrada : 404";
+						die();
+					}
+				}
+				$this->params = $url ? array_values($url): [];
+				call_user_func_array([$this->controller,$this->method], $this->params);
+			}else{
+				echo "Página no Encontrada : 404";
+				die();
 			}
+		}else{
+			require_once 'app/controllers/'.$this->controller.'.php';
+			$this->controller = new $this->controller;
+			$this->params = [];
+			call_user_func_array([$this->controller,$this->method], $this->params);	
 		}
-
-		$this->params = $url ? array_values($url): [];			
-		call_user_func_array([$this->controller,$this->method], $this->params);	
 	}
 
 	public function parseURL()

@@ -12,28 +12,28 @@
 					//echo "{$item} {$rule} must be {$rule_value}<br>";
 					$value = $source[$item];
 					if($rule === 'required' && empty($value)){
-						$this->addError("{$item} is required");
+						$this->addError($item,'Este campo es Requerido');
 					} else if(!empty($value)){
 						switch ($rule) {
 							case 'min':
 								if(strlen($value) < $rule_value){
-									$this->addError("{$item} must be a minimun of {$rule_value} characters.");
+									$this->addError($item ,'Este campo debe Tener debe tener un mínimo de '.$rule_value.' caracteres');
 								}
 								break;
 							case 'max':
 								if(strlen($value) > $rule_value){
-									$this->addError("{$item} must be a maximun of {$rule_value} characters.");
+									$this->addError($item ,'Este campo debe Tener debe tener un máximo de '.$rule_value.' caracteres');
 								}
 								break;
 							case 'matches':
 								if($value != $source[$rule_value]){
-									$this->addError("{$rule_value} must match {$item}");
+									$this->addError($item ,'Este campo de confirmación no es el mismo');
 								}
 								break;
 							case 'unique':
-								$check = $this->_db->get($rule_value,array($item,"=",$value));
+								$check = $this->_db->get($rule_value[0],[array($rule_value[1],"=",$value)]);
 								if($check->count()){
-									$this->addError("{$item} already exists.");
+									$this->addError($item ,'Este Campo ya fue registrado, intente con otro');
 								}
 								break;
 							default:
@@ -49,8 +49,8 @@
 			return $this;
 		}
 
-		private function addError($error){
-			$this->_errors[] = $error;
+		private function addError($item, $message){
+			$this->_errors[$item] = $message;
 		}
 
 		public function errors(){

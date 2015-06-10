@@ -1,6 +1,5 @@
 <?php
 return array(
-
 	/*
 	|--------------------------------------------------------------------------
 	| Activador de Base de Datos
@@ -10,8 +9,17 @@ return array(
 	| 'false' para desactivarla
 	|
 	*/
-
-	'database_activate' => false ,
+	'database_activate' => true,
+	/*
+	|--------------------------------------------------------------------------
+	| Activador de Errores Base de Datos
+	|--------------------------------------------------------------------------
+	| 
+	| Depende de este valor como 'true' o 'false' para activar los avisos de 
+	| errores en alguna consulta o cualquier error referente a la base de datos
+	|
+	*/
+	'database_errors' => true,
 	/*
 	|--------------------------------------------------------------------------
 	| Conexion MySQL
@@ -24,7 +32,7 @@ return array(
 			'host' => '127.0.0.1',
 			'username' => 'root',
 			'password' => '',
-			'database' => 'snipe_database',
+			'database' => 'clinica',
 			'charset' => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix' => ''
