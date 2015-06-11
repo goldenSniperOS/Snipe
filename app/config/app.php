@@ -34,7 +34,7 @@ return array(
 			'password' => '',
 			'database' => 'clinica',
 			'charset' => 'utf8',
-			'collation' => 'utf8_unicode_ci',
+			'collation' => 'utf8_spanish_ci',
 			'prefix' => ''
 	),
 	/*

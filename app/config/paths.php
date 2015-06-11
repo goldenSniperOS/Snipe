@@ -25,7 +25,7 @@ return array(
 	| 
 	*/
 
-	'config' => rtrim(__FILE__,'paths.php').DIRECTORY_SEPARATOR.'config',
+	'config' => substr(__FILE__,0,strlen(__FILE__)-17).'/config',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -38,7 +38,20 @@ return array(
 	|
 	*/
 
-	'public' => 'http://'.$_SERVER['SERVER_NAME'].rtrim($_SERVER['PHP_SELF'],'index.php').'public',
+	'public' => 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].rtrim($_SERVER['PHP_SELF'],'index.php').'public',
+
+	/*
+	|--------------------------------------------------------------------------
+	| Public Path Absoluto
+	|--------------------------------------------------------------------------
+	|
+	| Aqui se coloca la direccion absoluta independiente del servidor, de la
+	| carpeta public para su necesidad
+	|
+	*/
+
+	'publicAbsolute' => substr(__FILE__,0,strlen(__FILE__)-20).'public',
+
 
 	/*
 	|--------------------------------------------------------------------------
@@ -51,8 +64,6 @@ return array(
 	|
 	*/
 
-	'base' => 'http://'.$_SERVER['SERVER_NAME'].str_replace('/index.php', '',$_SERVER['PHP_SELF'])
-
-
+	'base' => 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].str_replace('/index.php', '',$_SERVER['PHP_SELF'])
 );
 

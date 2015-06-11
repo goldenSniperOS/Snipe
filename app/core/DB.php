@@ -57,7 +57,7 @@
 		}
 		public function action($action,$table,$wheres = array()){
 			if(!empty($wheres)){
-				$operators = array('=','>','<','>=','<=','<>');
+				/*$operators = array('=','>','<','>=','<=','<>'); and More :3*/
 				$sql = "{$action} FROM {$table} WHERE ";
 				$counter = 0;
 				$values;
@@ -65,14 +65,12 @@
 					$field 		= $where[0];
 					$operator 	= $where[1];
 					$value 		= $where[2];
-					if(in_array($operator,$operators)){
-						$counter++;
-						$sql .="{$field} {$operator} ? ";
-						if(count($wheres) > 1 && count($wheres) != $counter){
-							$sql .= " AND ";
-						}
-						$values[] = $value;
+					$counter++;
+					$sql .="{$field} {$operator} ? ";
+					if(count($wheres) > 1 && count($wheres) != $counter){
+						$sql .= " AND ";
 					}
+					$values[] = $value;
 				}
 				if(!$this->query($sql,$values)->error()){
 					return $this;

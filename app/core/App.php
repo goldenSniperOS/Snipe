@@ -23,15 +23,14 @@ class App
 						$this->method = $url[1];
 						unset($url[1]);				
 					}else{
-						echo "Página no Encontrada : 404";
+						Redirect::to(404);
 						die();
 					}
 				}
 				$this->params = $url ? array_values($url): [];
 				call_user_func_array([$this->controller,$this->method], $this->params);
 			}else{
-				echo "Página no Encontrada : 404";
-				die();
+				Redirect::to(404);
 			}
 		}else{
 			require_once 'app/controllers/'.$this->controller.'.php';

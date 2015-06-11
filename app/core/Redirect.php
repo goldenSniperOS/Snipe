@@ -6,12 +6,12 @@
 					switch($location){
 						case 404:
 							header('HTTP/1.0 404 Not Found');
-							include 'includes/errors/404.php';
+							include Config::path('app').'/includes/errors/404.php';
 							exit();
 						break;
 					}
 				}
-				header('Location: '.$location);
+				header('Location: '.URL::to($location));
 				exit();
 			}
 		}

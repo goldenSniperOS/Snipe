@@ -6,6 +6,6 @@
 	<?=HTML::style('css/estilos.css')?>
 </head>
 <body>
-	<div class="logo"><h2>Esta Página no Existe :(</h2></div>
+	<div class="logo"><h2>Esta Página no Existe - 404 :(</h2></div>
 </body>
 </html>

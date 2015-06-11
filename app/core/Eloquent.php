@@ -10,7 +10,6 @@ class Eloquent{
 	protected $table = null,
 			$prefix = null,
 			$primaryKey = null,
-			$hasOne = null;
 
 	public function __construct(){
 		$this->_db = DB::getInstance();
@@ -52,8 +51,12 @@ class Eloquent{
 		return $this->_data;
 	}
 
-	public function relation(){
-		$this->_dataHasOne = new $this->hasOne;
+	public function all(){
+		return $this->_db->get($this->table,[])->results();
+	}
+
+	public function relation($class){
+		$this->_dataHasOne = new $class;
 		$this->_dataHasOne->find($this->data()->{$this->primaryKey});
 		return (!is_null($this->_dataHasOne)) ? $this->_dataHasOne->data(): false;
 	}
