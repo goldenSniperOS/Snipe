@@ -14,7 +14,7 @@ return array(
 	|
 	*/
 
-	'app' => substr(__FILE__,0,strlen(__FILE__)-17),
+	'app' => substr(__DIR__,0,strlen(__DIR__)-7),
 
 	/*
 	|--------------------------------------------------------------------------
@@ -25,7 +25,7 @@ return array(
 	| 
 	*/
 
-	'config' => substr(__FILE__,0,strlen(__FILE__)-17).'/config',
+	'config' => substr(__DIR__,0,strlen(__DIR__)-7).'/config',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -38,7 +38,7 @@ return array(
 	|
 	*/
 
-	'public' => 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].rtrim($_SERVER['PHP_SELF'],'index.php').'public',
+	'public' => 'http://'.$_SERVER['HTTP_HOST'].rtrim($_SERVER['PHP_SELF'],'index.php').'public',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -50,7 +50,7 @@ return array(
 	|
 	*/
 
-	'publicAbsolute' => substr(__FILE__,0,strlen(__FILE__)-20).'public',
+	'publicAbsolute' => substr(__DIR__,0,strlen(__DIR__)-10).'public',
 
 
 	/*
@@ -64,6 +64,6 @@ return array(
 	|
 	*/
 
-	'base' => 'http://'.$_SERVER['SERVER_NAME'].':'.$_SERVER['SERVER_PORT'].str_replace('/index.php', '',$_SERVER['PHP_SELF'])
+	'base' => 'http://'.$_SERVER['HTTP_HOST'].str_replace('/index.php', '',$_SERVER['PHP_SELF'])
 );
 

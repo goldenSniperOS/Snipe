@@ -57,7 +57,7 @@
 		}
 		public function action($action,$table,$wheres = array()){
 			if(!empty($wheres)){
-				/*$operators = array('=','>','<','>=','<=','<>'); and More :3*/
+				$operators = array('=','>','<','>=','<=','<>');
 				$sql = "{$action} FROM {$table} WHERE ";
 				$counter = 0;
 				$values;
@@ -65,12 +65,14 @@
 					$field 		= $where[0];
 					$operator 	= $where[1];
 					$value 		= $where[2];
-					$counter++;
-					$sql .="{$field} {$operator} ? ";
-					if(count($wheres) > 1 && count($wheres) != $counter){
-						$sql .= " AND ";
+					if(in_array($operator,$operators)){
+						$counter++;
+						$sql .="{$field} {$operator} ? ";
+						if(count($wheres) > 1 && count($wheres) != $counter){
+							$sql .= " AND ";
+						}
+						$values[] = $value;
 					}
-					$values[] = $value;
 				}
 				if(!$this->query($sql,$values)->error()){
 					return $this;
@@ -111,6 +113,31 @@
 			}		
 			return false;
 		}
+
+		public function call($procedure,$fields = array()){
+			try{
+				if(count($fields)){
+					$keys = array_keys($fields);
+					$values = null;
+					$x = 1;
+					foreach ($fields as $field) {
+						$values .= '?';
+						if($x < count($fields)){
+							$values .= ', ';
+						}
+						$x++;
+					}
+					$sql = "CALL {$procedure}({$values})";
+					if(!$this->query($sql,$fields)->error()){
+						return true;
+					}
+				}
+			}catch(PDOException $e){
+				die($e->getMessage());
+			}		
+			return false;
+		}
+
 		public function update($table,$id,$fields,$pk){
 			$set = '';
 			$x = 1;

@@ -9,7 +9,7 @@ return array(
 	| 'false' para desactivarla
 	|
 	*/
-	'database_activate' => true,
+	'database_activate' => false,
 	/*
 	|--------------------------------------------------------------------------
 	| Activador de Errores Base de Datos
@@ -19,7 +19,7 @@ return array(
 	| errores en alguna consulta o cualquier error referente a la base de datos
 	|
 	*/
-	'database_errors' => true,
+	'database_errors' => false,
 	/*
 	|--------------------------------------------------------------------------
 	| Conexion MySQL
@@ -32,7 +32,7 @@ return array(
 			'host' => '127.0.0.1',
 			'username' => 'root',
 			'password' => '',
-			'database' => 'clinica',
+			'database' => 'database',
 			'charset' => 'utf8',
 			'collation' => 'utf8_spanish_ci',
 			'prefix' => ''
