@@ -57,7 +57,6 @@
 		}
 		public function action($action,$table,$wheres = array()){
 			if(!empty($wheres)){
-				$operators = array('=','>','<','>=','<=','<>');
 				$sql = "{$action} FROM {$table} WHERE ";
 				$counter = 0;
 				$values;
@@ -65,14 +64,12 @@
 					$field 		= $where[0];
 					$operator 	= $where[1];
 					$value 		= $where[2];
-					if(in_array($operator,$operators)){
-						$counter++;
-						$sql .="{$field} {$operator} ? ";
-						if(count($wheres) > 1 && count($wheres) != $counter){
-							$sql .= " AND ";
-						}
-						$values[] = $value;
+					$counter++;
+					$sql .="{$field} {$operator} ? ";
+					if(count($wheres) > 1 && count($wheres) != $counter){
+						$sql .= " AND ";
 					}
+					$values[] = $value;
 				}
 				if(!$this->query($sql,$values)->error()){
 					return $this;
@@ -84,12 +81,15 @@
 				}
 			}
 		}
+
 		public function first(){
 			return $this->results()[0];
 		}
+		
 		public function get($table,$where){
 			return $this->action('SELECT *',$table,$where);
 		}
+		
 		public function insert($table,$fields = array()){
 			try{
 				if(count($fields)){
@@ -117,7 +117,6 @@
 		public function call($procedure,$fields = array()){
 			try{
 				if(count($fields)){
-					$keys = array_keys($fields);
 					$values = null;
 					$x = 1;
 					foreach ($fields as $field) {
@@ -129,7 +128,7 @@
 					}
 					$sql = "CALL {$procedure}({$values})";
 					if(!$this->query($sql,$fields)->error()){
-						return true;
+						return $this;
 					}
 				}
 			}catch(PDOException $e){

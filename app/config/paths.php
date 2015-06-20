@@ -25,7 +25,7 @@ return array(
 	| 
 	*/
 
-	'config' => substr(__DIR__,0,strlen(__DIR__)-7).'/config',
+	'config' => __DIR__,
 
 	/*
 	|--------------------------------------------------------------------------
@@ -50,7 +50,7 @@ return array(
 	|
 	*/
 
-	'publicAbsolute' => substr(__DIR__,0,strlen(__DIR__)-10).'public',
+	'public_absolute' => substr(__DIR__,0,strlen(__DIR__)-10).'public'.DIRECTORY_SEPARATOR,
 
 
 	/*
