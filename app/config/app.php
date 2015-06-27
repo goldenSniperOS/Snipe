@@ -34,7 +34,7 @@ return array(
 			'password' => '',
 			'database' => 'database',
 			'charset' => 'utf8',
-			'collation' => 'utf8_spanish_ci',
+			'collation' => 'utf8_unicode_ci',
 			'prefix' => ''
 	),
 	/*
@@ -53,17 +53,55 @@ return array(
 
 	/*
 	|--------------------------------------------------------------------------
-	| Variables de Sesión
+	| Variables de Sesión - Tabla de Sesiones en Base de Datos - Recordar Siempre
 	|--------------------------------------------------------------------------
 	| 
 	| Se utiliza para conocer el nombre de el Token de Formulario
-	| Y el nombre de la variable de sesion que mantiene el hash del usuario logueado
+	| Y el nombre de la variable de sesion que mantiene el hash del usuario logueado,
+	| Si activeDatabase esta desactivado, la sesión termina en el tiempo que una sesión
+	| termina por defecto en la configuración de PHP
 	|
 	*/
 	'session' => array(
+		'activeDatabase' => false,
 		'session_name' => 'user',
-		'token_name' => 'token'
-	)
+		'token_name' => 'token',
+		'table' => 'tbsesion',
+		'prefix' => 'SES',
+		'primaryKey' => 'ses_per_Codigo',
+		'hashField' => 'ses_Hash'
+	),
+	/*
+	|--------------------------------------------------------------------------
+	| Grupos de Usuarios por Permiso
+	|--------------------------------------------------------------------------
+	| Esta tabla Identifica a los Usuarios por permiso, para reservar areas de administrador
+	| o usuario cliente sea el caso necesario, Si activeDatabase esta deshabilitado todos tienen
+	| El permiso de Administrador
+	|
+	*/
+	'groups' => array(
+		'activeDatabase' => true,
+		'table' => 'tbgrupos',
+		'prefix' => 'GRU',
+		'primaryKey' => 'grupo_Codigo',
+		'permissionField' => 'grupo_Permisos',
+	),
+	/*
+	|--------------------------------------------------------------------------
+	| Clase de Usuarios
+	|--------------------------------------------------------------------------
+	| Selecciona el nombre del Modelo que llevara el control de los Usuarios y Los nombres
+	| de las Variables de Sesion que contienen la lista de Permisos y Si el usuario esta 
+	| Logueado o no
+	*/
+	'user' => [
+		'user_class' => 'Persona',
+		'userField' => 'per_Usuario',
+		'passwordField' => 'per_Contrasena',
+		'nameLogguedIn' => 'isLogguedIn',
+		'nameListPermission' => 'listPermission'
+	]
 );
 
 
