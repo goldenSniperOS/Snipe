@@ -23,8 +23,8 @@ class Auth
 				if($user->{Config::get('user/passwordField')} === Hash::make($password)){
 					//Estas Tres Lineas Loguean realmente al Usuario
 					
-					Session::put(Config::get('user/nameListPermission'),self::getPermissions($user));
-					Session::put(Config::get('user/nameLogguedIn'),true);
+					Session::put('listPermission'),self::getPermissions($user));
+					Session::put('isLogguedIn',true);
 					Session::put(Config::get('session/session_name'),$user);
 
 					if($remember && Config::get('session/activeDatabase')){
@@ -59,8 +59,8 @@ class Auth
 				]);
 			}
 		}
-		Session::delete(Config::get('user/nameLogguedIn'));
-		Session::delete(Config::get('user/nameListPermission'));
+		Session::delete('isLogguedIn');
+		Session::delete('listPermission'));
 		Session::delete(Config::get('session/session_name'));
 		Cookie::delete(Config::get('remember/cookie_name'));
 	}
@@ -75,17 +75,17 @@ class Auth
 	}
 
 	public function hasPermission($key){
-		if(Session::exists(Config::get('user/nameListPermission'))){
-			if(property_exists(Session::get(Config::get('user/nameListPermission')), $key)){
-				return Session::get(Config::get('user/nameListPermission'))->{$key};
+		if(Session::exists('listPermission'))){
+			if(property_exists(Session::get('listPermission')), $key)){
+				return Session::get('listPermission'))->{$key};
 			}
 		}
 		return false;
 	}
 
 	public function isLoggedIn(){
-		if(Session::exists(Config::get('user/nameLogguedIn'))){
-			return Session::get(Config::get('user/nameLogguedIn'));
+		if(Session::exists('isLogguedIn')){
+			return Session::get('isLogguedIn');
 		}else{
 			if(Cookie::exists(Config::get('remember/cookie_name'))){
 				$hashCheck = DB::getInstance()->get(Config::get('session/table'),
@@ -96,15 +96,14 @@ class Auth
 					$class = Config::get('user/user_class');
 					$user = $class::find($hashCheck->{Config::get('session/primaryKey')});
 					
-					Session::put(Config::get('user/nameListPermission'),self::getPermissions($user));
-					Session::put(Config::get('user/nameLogguedIn'),true);
+					Session::put('listPermission'),self::getPermissions($user));
+					Session::put('isLogguedIn',true);
 					Session::put(Config::get('session/session_name'),$user);
 					
-					return Session::get(Config::get('user/nameLogguedIn'));
+					return Session::get('isLogguedIn');
 				}
 			}
 		}
 		return false;
 	}
 }
-?>

@@ -1,7 +1,4 @@
 <?php
-/**
-* 
-*/
 class Model extends Eloquent
 {
 	protected static $table = 'tabla';

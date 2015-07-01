@@ -90,4 +90,3 @@ class Eloquent{
 		return null;
 	}
 }
-?>

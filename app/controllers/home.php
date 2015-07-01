@@ -1,13 +1,13 @@
 <?php
-class Home extends Controller
+class Home
 {
 	public function index()
 	{
-		$this->view('home/index');
+		View::render('home/index');
 	}
 
 	public function otra()
 	{	
-		$this->view('home/plantilla');
+		View::render('home/plantilla');
 	}
 }
