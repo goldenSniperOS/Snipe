@@ -23,10 +23,11 @@ class Auth
 				if($user->{Config::get('user/passwordField')} === Hash::make($password)){
 					//Estas Tres Lineas Loguean realmente al Usuario
 					
-					Session::put('listPermission'),self::getPermissions($user));
 					Session::put('isLogguedIn',true);
 					Session::put(Config::get('session/session_name'),$user);
-
+					if(Config::get('groups/activeDatabase')){
+						Session::put('listPermission'),self::getPermissions($user));
+					}
 					if($remember && Config::get('session/activeDatabase')){
 						$hash = Hash::unique();
 						$hashCheck = DB::getInstance()->get(Config::get('session/table'),
@@ -51,7 +52,7 @@ class Auth
 	}
 
 	public static function logout(){
-		if(Session::exists(Config::get('session/session_name'))){
+		if(Session::exists(Config::get('session/session_name')) && Config::get('session/activeDatabase')){
 			$user = Session::get(Config::get('session/session_name'));
 			if($user){
 				DB::getInstance()->delete(Config::get('session/table'),[
@@ -60,7 +61,9 @@ class Auth
 			}
 		}
 		Session::delete('isLogguedIn');
-		Session::delete('listPermission'));
+		if(Config::get('groups/activeDatabase')){
+			Session::delete('listPermission'));
+		}
 		Session::delete(Config::get('session/session_name'));
 		Cookie::delete(Config::get('remember/cookie_name'));
 	}

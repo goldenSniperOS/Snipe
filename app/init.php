@@ -8,8 +8,6 @@ spl_autoload_register(function($class){
 		if(file_exists('app/models/'.$class.'.php')){
 			require_once 'models/'.$class.'.php';
 		}
-	}else{
-		echo '<p>No hay Conexion a la Base de Datos</p>';
 	}
 });
 session_start();
