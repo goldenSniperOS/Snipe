@@ -91,18 +91,16 @@ class Auth
 			return Session::get('isLogguedIn');
 		}else{
 			if(Cookie::exists(Config::get('remember/cookie_name'))){
-				$hashCheck = DB::getInstance()->get(Config::get('session/table'),
-				[
-					[Config::get('session/hashField'),'=',Cookie::get(Config::get('remember/cookie_name'))]
-				])->first();
+				$hashCheck = DB::getInstance()
+					->table(Config::get('session/table')
+					->where(Config::get('session/hashField'),'=',Cookie::get(Config::get('remember/cookie_name')))
+					->getFirst();
 				if($hashCheck){
 					$class = Config::get('user/user_class');
-					$user = $class::find($hashCheck->{Config::get('session/primaryKey')});
-					
+					$user = $class::find($hashCheck->{Config::get('session/primaryKey')});				
 					Session::put('listPermission'),self::getPermissions($user));
 					Session::put('isLogguedIn',true);
 					Session::put(Config::get('session/session_name'),$user);
-					
 					return Session::get('isLogguedIn');
 				}
 			}

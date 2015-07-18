@@ -6,6 +6,15 @@ class DB{
 			$_error = false,
 			$_results,
 			$_count = 0;
+	
+	private $sqlFinal  = [
+		'select' => 'SELECT *',
+		'table' => 'FROM table',
+		'join' => '',
+		'where' => '',
+		'group' => '',
+		'order' => ''
+	];
 
 	private function __construct(){
 		try{
@@ -55,6 +64,106 @@ class DB{
 		}
 		return $this;	
 	}
+
+	public function where(){
+		if(func_num_args() > 0);{
+			if(func_num_args() == 2){
+				$field = func_get_arg(0);
+				$operator = '=';
+				$value = func_get_arg(1);
+			}else{
+				$field = func_get_arg(0);
+				$operator = func_get_arg(1);
+				$value = func_get_arg(2);
+			}
+
+			$value = (is_numeric($value))?$value:'"'.$value.'"';
+			if($this->sqlFinal['where'] == ''){
+				$this->sqlFinal['where'] = 'WHERE '.$field.' '.$operator.' '.$value;
+			}else{
+				$this->sqlFinal['where'] .= ' AND '.$field.' '.$operator.' '.$value;
+			}
+			return $this;
+		}
+	}
+
+	public function orWhere(){
+		if(func_num_args() > 0);{
+			if(func_num_args() == 2){
+				$field = func_get_arg(0);
+				$operator = '=';
+				$value = func_get_arg(1);
+			}else{
+				$field = func_get_arg(0);
+				$operator = func_get_arg(1);
+				$value = func_get_arg(2);
+			}
+
+			$value = (is_numeric($value))?$value:'"'.$value.'"';
+			if($this->sqlFinal['where'] == ''){
+				$this->sqlFinal['where'] = 'WHERE '.$field.' '.$operator.' '.$value;
+			}else{
+				$this->sqlFinal['where'] .= ' OR '.$field.' '.$operator.' '.$value;
+			}
+			return $this;
+		}
+	}
+
+	public function select(){
+		if(func_num_args() > 0);{
+			$args = func_get_args();
+			$this->sqlFinal['select'] = 'SELECT ';
+		    foreach ($args as $index => $arg) {
+		        if($index == count($args)-1){
+		        	$this->sqlFinal['select'].= $arg;
+		        }else{
+		        	$this->sqlFinal['select'].= $arg.',';
+		        }
+
+		    }
+			return $this;
+		}
+	}
+
+	public function join($table,$primarykey,$operator,$foreignkey){
+		$this->sqlFinal['join'] = 'INNER JOIN '.$table.' ON '.$primarykey.$operator.$foreignkey;
+		return $this;
+	}
+
+	public function leftJoin($table,$primarykey,$operator,$foreignkey){
+		$this->sqlFinal['join'] = 'LEFT JOIN '.$table.' ON '.$primarykey.$operator.$foreignkey;
+		return $this;
+	}
+
+	public function rightJoin($table,$primarykey,$operator,$foreignkey){
+		$this->sqlFinal['join'] = 'RIGHT JOIN '.$table.' ON '.$primarykey.$operator.$foreignkey;
+		return $this;
+	}
+
+	public function table($table,$alias = null){
+		$alias = ($alias)?" AS ".$alias:"";
+		$this->sqlFinal['table'] = 'FROM '.$table.$alias;
+		return $this;
+	}
+
+	public function groupBy($field){
+		$this->sqlFinal['group'] = 'GROUP BY'.$field;
+		return $this;
+	}
+
+	public function orderBy($field,$direction = null){
+		if($direction){
+			$this->sqlFinal['order'] = 'ORDER BY '.$field.' '.strtoupper($direction);
+		}else{
+			$this->sqlFinal['order'] = 'ORDER BY '.$field;
+		}
+	}
+
+	public function exec(){
+		$query = implode(" ", $this->sqlFinal);
+		return $this->query($query)->results();
+	}
+
 	public function action($action,$table,$wheres = array()){
 		if(!empty($wheres)){
 			$sql = "{$action} FROM {$table} WHERE ";
@@ -80,6 +189,15 @@ class DB{
 				return $this;
 			}
 		}
+	}
+
+	public function getFirst(){
+		$query = implode(" ", $this->sqlFinal);
+		$this->query($query)
+		if($this->count() > 0){
+			return $this->results()[0];
+		}
+		return null;
 	}
 
 	public function first(){

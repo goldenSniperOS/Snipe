@@ -99,8 +99,6 @@ return array(
 		'user_class' => 'Persona',
 		'userField' => 'per_Usuario',
 		'passwordField' => 'per_Contrasena',
-		'nameLogguedIn' => 'isLogguedIn',
-		'nameListPermission' => 'listPermission'
 	]
 );
 
