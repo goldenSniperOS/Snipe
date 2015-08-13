@@ -9,7 +9,7 @@ return array(
 	| 'false' para desactivarla
 	|
 	*/
-	'database_activate' => false,
+	'database_activate' => true,
 	/*
 	|--------------------------------------------------------------------------
 	| Activador de Errores Base de Datos
@@ -19,7 +19,7 @@ return array(
 	| errores en alguna consulta o cualquier error referente a la base de datos
 	|
 	*/
-	'database_errors' => false,
+	'database_errors' => true,
 	/*
 	|--------------------------------------------------------------------------
 	| Conexion MySQL
@@ -32,7 +32,7 @@ return array(
 			'host' => '127.0.0.1',
 			'username' => 'root',
 			'password' => '',
-			'database' => 'database',
+			'database' => 'consultorio',
 			'charset' => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix' => ''

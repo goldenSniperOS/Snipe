@@ -25,9 +25,11 @@ class Auth
 					
 					Session::put('isLogguedIn',true);
 					Session::put(Config::get('session/session_name'),$user);
+
 					if(Config::get('groups/activeDatabase')){
 						Session::put('listPermission'),self::getPermissions($user));
 					}
+					
 					if($remember && Config::get('session/activeDatabase')){
 						$hash = Hash::unique();
 						$hashCheck = DB::getInstance()->get(Config::get('session/table'),
