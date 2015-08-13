@@ -24,6 +24,14 @@ class DB{
 		}
 	}
 
+	protected function tableLock(){
+		$this->_tableLock = true;
+	}
+
+	public function getLock(){
+		return $this->_tableLock;
+	}
+
 	private static function initQuery(){
 		self::$_instance->sql['action'] = 'SELECT *';
 		self::$_instance->sql['table'] = 'FROM table';
@@ -33,6 +41,7 @@ class DB{
 		self::$_instance->sql['group'] = '';
 		self::$_instance->sql['order'] = '';
 		self::$_instance->sql['limit'] = '';
+		self::$_instance->_tableLock = false;
 	}
 
 	public static function getInstance(){
@@ -145,8 +154,11 @@ class DB{
 	}
 
 	public function table($table,$alias = null){
-		$alias = ($alias)?" AS ".$alias:"";
-		$this->sql['table'] = 'FROM '.$table.$alias;
+		if(!$this->_tableLock){
+			$alias = ($alias)?" AS ".$alias:"";
+			$this->sql['table'] = 'FROM '.$table.$alias;
+			$this->tableLock();
+		}	
 		return $this;
 	}
 

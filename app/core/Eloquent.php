@@ -4,8 +4,6 @@ class Eloquent {
 					 $prefix = null,
 					 $primaryKey = 'id';
 
-	private $_instanceDB = null;
-
 	public function __construct($codigo = null){
 		if($codigo){
 			$objeto = self::find($codigo);
@@ -53,25 +51,9 @@ class Eloquent {
 				$operator = func_get_arg(1);
 				$value = func_get_arg(2);
 			}
-			if($this->_instanceDB){
-				$this->_instanceDB = DB::getInstance()->table($clase::$primaryKey)->where($field,$operator,$value);
-			}else{
-				$this->_instanceDB = $this->_instanceDB->where($field,$operator,$value);
-			}
-			return $this;
+			$_instanceDB = DB::getInstance()->table(static::$table)->where($field,$operator,$value);
+			return $_instanceDB;
 		}
-	}
-
-	public static function get(){
-		if($this->_instanceDB){
-			$results = $this->_instanceDB->get();
-			if(count($results)>0){
-				return $results;
-			}else{
-				return true;
-			}
-		}
-		return null;
 	}
 
 	//Crea un codigo con un prefijo otorgado en la clase mas un numero de N cifras
@@ -97,17 +79,6 @@ class Eloquent {
 		}
 	}
 
-	public static function delete($fields = array()){
-		private $_instanceDB = null;
-		if($this->_instanceDB){
-			if(!$this->_instanceDB->table(static::$table)->delete()){
-				throw new Exception('Hubo un Problema Eliminando '.get_called_class());
-			}else{
-				return true;
-			}
-		}
-		return false;
-	}
 
 	public static function all(){
 		return DB::getInstance()->table(static::$table)->get();
