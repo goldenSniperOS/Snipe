@@ -26,7 +26,7 @@ spl_autoload_register(function($class){
 session_start();
 require_once 'functions/sanitize.php';
 require_once 'functions/assoc.php';
-
+date_default_timezone_set(Config::get('place'));
 if(Config::get('database_activate') == false){
 	include Config::path('app').'/includes/errors/nodatabase.php';
 }

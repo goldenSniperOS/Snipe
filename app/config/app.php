@@ -22,6 +22,16 @@ return array(
 	'database_errors' => false,
 	/*
 	|--------------------------------------------------------------------------
+	| Zona Horaria en la Aplicación
+	|--------------------------------------------------------------------------
+	| 
+	| Con esta línea podemos setear la localidad en la que funcionará la aplicación,
+	| para asi setear la hora en la que funcionará y retorno de la funcion date()
+	|
+	*/
+	'place' => 'America/Lima',
+	/*
+	|--------------------------------------------------------------------------
 	| Conexion MySQL
 	|--------------------------------------------------------------------------
 	| 
