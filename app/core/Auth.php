@@ -15,29 +15,24 @@ class Auth
 		return null;
 	}
 
-	public static function login($username = null,$password = null,$remember = null){
-		$class = Config::get('user/user_class');
+	public static function login($username = null,$password = null,$remember = null){	
 		if($username != null && $password != null){
+			$class = Config::get('user/user_class');
 			$user = $class::find($username,Config::get('user/userField'));
 			if($user != null){
 				if($user->{Config::get('user/passwordField')} === Hash::make($password)){
-					//Estas Tres Lineas Loguean realmente al Usuario
-					
-					Session::put('isLogguedIn',true);
+					//Estas Dos Lineas Loguean realmente al Usuario			
 					Session::put(Config::get('session/session_name'),$user);
-
-					if(Config::get('groups/activeDatabase')){
-						Session::put('listPermission'),self::getPermissions($user));
+					Session::put('isLoggedIn',true);				
+					if(Config::get('groups/active')){
+						Session::put('listPermission',self::getPermissions($user));
 					}
 					
-					if($remember && Config::get('session/activeDatabase')){
+					if($remember && Config::get('session/active')){
 						$hash = Hash::unique();
-						$hashCheck = DB::getInstance()->get(Config::get('session/table'),
-							[
-								[Config::get('session/primaryKey'),'=',$user->{$user->getInfo('primaryKey')}]
-							])->first();
+						$hashCheck = DB::getInstance()->table(Config::get('session/table'))->where(Config::get('session/primaryKey'),$user->{$user->getInfo('primaryKey')})->first();
 						if($hashCheck == null){
-							DB::getInstance()->insert(Config::get('session/table'),[
+							DB::getInstance()->table(Config::get('session/table'))->insert([
 								Config::get('session/primaryKey') => $user->{$user->getInfo('primaryKey')},
 								Config::get('session/hashField') => $hash
 							]);
@@ -62,48 +57,69 @@ class Auth
 				]);
 			}
 		}
-		Session::delete('isLogguedIn');
+		Session::delete('isLoggedIn');
 		if(Config::get('groups/activeDatabase')){
-			Session::delete('listPermission'));
+			Session::delete('listPermission');
 		}
 		Session::delete(Config::get('session/session_name'));
 		Cookie::delete(Config::get('remember/cookie_name'));
 	}
 
-	private static function getPermissions($user = null){
-		if($user && Config::get('groups/activeDatabase')){
-			$foreignGroup = strtolower($user->getInfo('prefix')).'_'.Config::get('groups/primaryKey');
-			$grupo =  DB::getInstance()->get(Config::get('groups/table'),[[Config::get('groups/primaryKey'),'=',$user->{$foreignGroup}]])->results()[0];
-			return json_decode($grupo->{Config::get('groups/permissionField')});	
+	public static function getPermissions($user = null){
+		if($user && Config::get('groups/active')){
+			$foreignGroup = Config::get('user/foreignGroup');
+			$grupo =  DB::getInstance()->table(Config::get('groups/table'))->where(Config::get('groups/primaryKey'),$user->{$foreignGroup})->first();
+			return json_decode($grupo->{Config::get('groups/permissionField')});
 		}
 		return false;
 	}
 
-	public function hasPermission($key){
-		if(Session::exists('listPermission'))){
-			if(property_exists(Session::get('listPermission')), $key)){
-				return Session::get('listPermission'))->{$key};
+	public static function updatePermissions(){
+		if(Session::exists('isLoggedIn') && Session::exists(Config::get('session/session_name'))){
+			$foreignGroup = Config::get('user/foreignGroup');
+			$user = Session::get(Config::get('session/session_name'));
+			if(property_exists($user, $foreignGroup)){
+				if($user && Config::get('groups/active')){
+					$grupo =  DB::getInstance()->table(Config::get('groups/table'))->where(Config::get('groups/primaryKey'),$user->{$foreignGroup})->first();
+					Session::put('listPermission',json_decode($grupo->{Config::get('groups/permissionField')}));
+				}
 			}
 		}
 		return false;
 	}
 
+	public function hasPermission($key = null){
+		if(Config::get('groups/active')){
+			if(Session::exists('listPermission')){
+				if(property_exists(Session::get('listPermission'), $key)){
+					return Session::get('listPermission')->{$key};
+				}
+			}
+			return false;
+		}
+		return true;
+	}
+
 	public function isLoggedIn(){
-		if(Session::exists('isLogguedIn')){
-			return Session::get('isLogguedIn');
+		if(Session::exists('isLoggedIn')){
+			return Session::get('isLoggedIn');
 		}else{
 			if(Cookie::exists(Config::get('remember/cookie_name'))){
 				$hashCheck = DB::getInstance()
-					->table(Config::get('session/table')
+					->table(Config::get('session/table'))
 					->where(Config::get('session/hashField'),'=',Cookie::get(Config::get('remember/cookie_name')))
-					->getFirst();
+					->first();
 				if($hashCheck){
 					$class = Config::get('user/user_class');
 					$user = $class::find($hashCheck->{Config::get('session/primaryKey')});				
-					Session::put('listPermission'),self::getPermissions($user));
-					Session::put('isLogguedIn',true);
+					Session::put('isLoggedIn',true);
 					Session::put(Config::get('session/session_name'),$user);
-					return Session::get('isLogguedIn');
+					if(Config::get('groups/active')){
+						Session::put('listPermission',self::getPermissions($user));
+					}
+					return Session::get('isLoggedIn');
+				}else{
+					Cookie::delete(Config::get('remember/cookie_name'));
 				}
 			}
 		}

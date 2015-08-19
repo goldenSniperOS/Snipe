@@ -25,8 +25,8 @@ class Eloquent {
 			$unique = static::$primaryKey;
 		}
 		if($valor){
-			$data = DB::getInstance()->table(static::$table)->where($unique,$valor)->first();
-			if($data->count()){
+			$data = DB::getInstance()->table(static::$table)->where($unique,$valor)->first();		
+			if($data){
 				$clase = get_called_class();
 				$object = new $clase;
 				foreach ($data as $key => $value) {
@@ -78,7 +78,6 @@ class Eloquent {
 			throw new Exception('Hubo un Problema Actualizando '.get_called_class());
 		}
 	}
-
 
 	public static function all(){
 		return DB::getInstance()->table(static::$table)->get();

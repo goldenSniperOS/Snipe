@@ -9,7 +9,7 @@ return array(
 	| 'false' para desactivarla
 	|
 	*/
-	'database_activate' => true,
+	'database_activate' => false,
 	/*
 	|--------------------------------------------------------------------------
 	| Activador de Errores Base de Datos
@@ -19,7 +19,7 @@ return array(
 	| errores en alguna consulta o cualquier error referente a la base de datos
 	|
 	*/
-	'database_errors' => true,
+	'database_errors' => false,
 	/*
 	|--------------------------------------------------------------------------
 	| Conexion MySQL
@@ -28,15 +28,15 @@ return array(
 	| Se colocan los parámetros de Conexion a la Base de Datos
 	|
 	*/
-	'mysql' => array(
+	'mysql' => [
 			'host' => '127.0.0.1',
 			'username' => 'root',
 			'password' => '',
-			'database' => 'consultorio',
+			'database' => 'database',
 			'charset' => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix' => ''
-	),
+	],
 	/*
 	|--------------------------------------------------------------------------
 	| Cookies
@@ -46,11 +46,10 @@ return array(
 	| Por Cada Usuario Logueado, y su Tiempo de expiración
 	|
 	*/
-	'remember' => array(
+	'remember' => [
 		'cookie_name' => 'hash',
 		'cookie_expiry' => 604800
-	),
-
+	],
 	/*
 	|--------------------------------------------------------------------------
 	| Variables de Sesión - Tabla de Sesiones en Base de Datos - Recordar Siempre
@@ -58,35 +57,33 @@ return array(
 	| 
 	| Se utiliza para conocer el nombre de el Token de Formulario
 	| Y el nombre de la variable de sesion que mantiene el hash del usuario logueado,
-	| Si activeDatabase esta desactivado, la sesión termina en el tiempo que una sesión
+	| Si active esta desactivado, la sesión termina en el tiempo que una sesión
 	| termina por defecto en la configuración de PHP
 	|
 	*/
-	'session' => array(
-		'activeDatabase' => false,
+	'session' => [
+		'active' => false,
 		'session_name' => 'user',
 		'token_name' => 'token',
-		'table' => 'tbsesion',
-		'prefix' => 'SES',
-		'primaryKey' => 'ses_per_Codigo',
-		'hashField' => 'ses_Hash'
-	),
+		'table' => 'sesiones',
+		'primaryKey' => 'Usuario',
+		'hashField' => 'Hash'
+	],
 	/*
 	|--------------------------------------------------------------------------
 	| Grupos de Usuarios por Permiso
 	|--------------------------------------------------------------------------
-	| Esta tabla Identifica a los Usuarios por permiso, para reservar areas de administrador
-	| o usuario cliente sea el caso necesario, Si activeDatabase esta deshabilitado todos tienen
-	| El permiso de Administrador
+	| Esta tabla Identifica a los Usuarios por permiso, para reservar areas de 
+	| administrador o usuario cliente sea el caso necesario, Si el valor de active 
+	| es 'false' Funcionará como una autenticación normal
 	|
 	*/
-	'groups' => array(
-		'activeDatabase' => true,
-		'table' => 'tbgrupos',
-		'prefix' => 'GRU',
-		'primaryKey' => 'grupo_Codigo',
-		'permissionField' => 'grupo_Permisos',
-	),
+	'groups' => [
+		'active' => false,
+		'table' => 'grupo',
+		'primaryKey' => 'id',
+		'permissionField' => 'Permisos',
+	],
 	/*
 	|--------------------------------------------------------------------------
 	| Clase de Usuarios
@@ -96,9 +93,10 @@ return array(
 	| Logueado o no
 	*/
 	'user' => [
-		'user_class' => 'Persona',
-		'userField' => 'per_Usuario',
-		'passwordField' => 'per_Contrasena',
+		'user_class' => 'Usuario',
+		'userField' => 'Documento',
+		'passwordField' => 'Contrasena',
+		'foreignGroup' => 'Grupo'
 	]
 );
 
