@@ -128,11 +128,26 @@ class DB{
 			$this->sql['action'] = 'SELECT';
 		    foreach ($args as $index => $arg) {
 		        if($index == count($args)-1){
-		        	$this->sql['action'].= $arg;
+		        	$this->sql['action'].= ' '.$arg;
 		        }else{
-		        	$this->sql['action'].= $arg.',';
+		        	$this->sql['action'].= ' '.$arg.',';
 		        }
 
+		    }
+			return $this;
+		}
+	}
+
+	public function distinct(){
+		if(func_num_args() > 0);{
+			$args = func_get_args();
+			$this->sql['action'] = 'SELECT DISTINCT';
+		    foreach ($args as $index => $arg) {
+		        if($index == count($args)-1){
+		        	$this->sql['action'].= ' '.$arg;
+		        }else{
+		        	$this->sql['action'].= ' '.$arg.',';
+		        }
 		    }
 			return $this;
 		}
