@@ -188,6 +188,7 @@ class DB{
 		}else{
 			$this->sql['order'] = 'ORDER BY '.$field;
 		}
+		return $this;
 	}
 
 	public function limit($param1,$param2 = null){
