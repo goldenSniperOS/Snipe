@@ -1,0 +1,1 @@
+En esta carpeta podrás colocar todo tipo de información pública, como archivos css, javascript, imágenes entre otros

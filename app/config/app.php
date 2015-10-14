@@ -12,6 +12,17 @@ return array(
 	'database_activate' => false,
 	/*
 	|--------------------------------------------------------------------------
+	| Excepción de Clases en El Autoloader
+	|--------------------------------------------------------------------------
+	| 
+	| En este Array puedes colocar, las clases que no desees considerar en el Autoloader.
+	| Colocando un * delante el nombre de la clase, no se agregarán todas las que contengan,
+	| ese nombre
+	|
+	*/
+	'class_exceptions' => [],
+	/*
+	|--------------------------------------------------------------------------
 	| Activador de Errores Base de Datos
 	|--------------------------------------------------------------------------
 	| 
