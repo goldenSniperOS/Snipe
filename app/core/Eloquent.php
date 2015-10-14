@@ -51,10 +51,26 @@ class Eloquent {
 				$operator = func_get_arg(1);
 				$value = func_get_arg(2);
 			}
-			$_instanceDB = DB::getInstance()->table(static::$table)->where($field,$operator,$value);
+			$_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->where($field,$operator,$value);
 			return $_instanceDB;
 		}
 	}
+
+	public function join($table,$primarykey,$operator,$foreignkey){
+		$_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->join($table,$primarykey,$operator,$foreignkey)
+		return return $_instanceDB;
+	}
+
+	public function rightJoin($table,$primarykey,$operator,$foreignkey){
+		$_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->rightJoin($table,$primarykey,$operator,$foreignkey)
+		return return $_instanceDB;
+	}
+
+	public function leftJoin($table,$primarykey,$operator,$foreignkey){
+		$_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->leftJoin($table,$primarykey,$operator,$foreignkey)
+		return return $_instanceDB;
+	}
+
 
 	//Crea un codigo con un prefijo otorgado en la clase mas un numero de N cifras
 	public static function code($numeroFinal){
@@ -76,6 +92,15 @@ class Eloquent {
 		}
 		if(!DB::getInstance()->table(static::$table)->where($key,$id)->update($fields)){
 			throw new Exception('Hubo un Problema Actualizando '.get_called_class());
+		}
+	}
+
+	public static function delete($fields = array(),$id = null,$key = null){
+		if(!$key){
+			$key = static::$primaryKey;
+		}
+		if(!DB::getInstance()->table(static::$table)->where($key,$id)->delete()){
+			throw new Exception('Hubo un Problema Eliminando '.get_called_class());
 		}
 	}
 

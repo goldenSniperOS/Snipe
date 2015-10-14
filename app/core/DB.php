@@ -154,17 +154,17 @@ class DB{
 	}
 
 	public function join($table,$primarykey,$operator,$foreignkey){
-		$this->sql['join'] = 'INNER JOIN '.$table.' ON '.$primarykey.$operator.$foreignkey;
+		$this->sql['join'] += ' INNER JOIN '.$table.' ON '.$primarykey.$operator.$foreignkey;
 		return $this;
 	}
 
 	public function leftJoin($table,$primarykey,$operator,$foreignkey){
-		$this->sql['join'] = 'LEFT JOIN '.$table.' ON '.$primarykey.$operator.$foreignkey;
+		$this->sql['join'] += ' LEFT JOIN '.$table.' ON '.$primarykey.$operator.$foreignkey;
 		return $this;
 	}
 
 	public function rightJoin($table,$primarykey,$operator,$foreignkey){
-		$this->sql['join'] = 'RIGHT JOIN '.$table.' ON '.$primarykey.$operator.$foreignkey;
+		$this->sql['join'] += ' RIGHT JOIN '.$table.' ON '.$primarykey.$operator.$foreignkey;
 		return $this;
 	}
 
