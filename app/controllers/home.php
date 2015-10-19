@@ -16,12 +16,15 @@ class Home
 {
 	public function index()
 	{
-		View::render('home/index');
-	}
-
-	public function plantilla()
-	{	
-		View::render('home/plantilla');
+		$layout = "home";
+		$meta = array(
+            'title' => 'Home',
+            'description' => 'El mejor framework creado para ayudar a nuestros usuarios a construir sus webs.',
+            'keywords' => 'php, framework, mvc, cms',
+            'author' => 'Snipe Framework Group',
+            'robots' => 'All'
+        );
+		View::render('home/index', ['meta' => $meta], $layout);
 	}
 
 }
