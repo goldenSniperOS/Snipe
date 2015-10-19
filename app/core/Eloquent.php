@@ -57,18 +57,18 @@ class Eloquent {
 	}
 
 	public function join($table,$primarykey,$operator,$foreignkey){
-		$_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->join($table,$primarykey,$operator,$foreignkey)
-		return return $_instanceDB;
+		$_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->join($table,$primarykey,$operator,$foreignkey);
+		return $_instanceDB;
 	}
 
 	public function rightJoin($table,$primarykey,$operator,$foreignkey){
-		$_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->rightJoin($table,$primarykey,$operator,$foreignkey)
-		return return $_instanceDB;
+		$_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->rightJoin($table,$primarykey,$operator,$foreignkey);
+		return $_instanceDB;
 	}
 
 	public function leftJoin($table,$primarykey,$operator,$foreignkey){
-		$_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->leftJoin($table,$primarykey,$operator,$foreignkey)
-		return return $_instanceDB;
+		$_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->leftJoin($table,$primarykey,$operator,$foreignkey);
+		return $_instanceDB;
 	}
 
 
