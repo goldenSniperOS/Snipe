@@ -1,3 +1,8 @@
+<?php
+if (Session::exists('errores')) {
+    $errores = Session::flash('errores');
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
