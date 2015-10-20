@@ -10,7 +10,7 @@ return array(
       | 'false' para desactivarla
       |
      */
-    'database_activate' => false,
+    'database_activate' => true,
     /*
       |--------------------------------------------------------------------------
       | Excepción de Clases en El Autoloader
@@ -51,10 +51,10 @@ return array(
       |
      */
     'mysql' => [
-        'host' => '127.0.0.1',
+        'host' => 'localhost',
         'username' => 'root',
-        'password' => '',
-        'database' => 'database',
+        'password' => 'Cambuche1795!',
+        'database' => 'test_fr',
         'charset' => 'utf8',
         'collation' => 'utf8_unicode_ci',
         'prefix' => ''
@@ -115,10 +115,10 @@ return array(
       | Logueado o no
      */
     'user' => [
-        'user_class' => 'Usuario',
-        'userField' => 'Documento',
-        'passwordField' => 'Contrasena',
-        'foreignGroup' => 'Grupo'
+        'user_class' => 'UsersModel',
+        'userField' => 'username',
+        'passwordField' => 'password',
+        'foreignGroup' => 'id_profiles'
     ]
 );
 
