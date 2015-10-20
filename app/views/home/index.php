@@ -11,8 +11,16 @@
     </select>  
 </form>
 
-<a href="<?= URL::to('profile') ?>" class="btn btn-lg btn-danger">Profile</a>
-<a href="<?= URL::to('admin') ?>" class="btn btn-lg btn-danger">Admin</a>
+<?php if (Auth::isLoggedIn()) { ?>
+    <a href="<?= URL::to('profile') ?>" class="btn btn-lg btn-danger">Profile</a>
+    <a href="<?= URL::to('admin') ?>" class="btn btn-lg btn-danger">Admin</a>
+    <a href="<?= URL::to('users/logout') ?>" class="btn btn-lg btn-danger">logout </a>
+<?php } else { ?>
+    <a href="<?= URL::to('home/login') ?>" class="btn btn-lg btn-danger">Login</a>
+    <a href="<?= URL::to('home/register') ?>" class="btn btn-lg btn-danger">Register</a>
+<?php } ?>
+
+
 
 
 
