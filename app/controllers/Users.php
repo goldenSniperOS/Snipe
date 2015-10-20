@@ -119,5 +119,6 @@ class Users {
             Redirect::to('home/register/' . $equivalence . $get_id);
         }
     }
+    
 
 }
