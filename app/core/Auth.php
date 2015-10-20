@@ -20,8 +20,15 @@ class Auth {
         if ($username != null && $password != null) {
             $class = Config::get('user/user_class');
             $user = $class::find($username, Config::get('user/userField'));
+            
+            //echo '<pre>';
+            //var_dump($user);
+            //echo '</pre>';
+            //die();
+
             if ($user != null) {
                 if ($user->{Config::get('user/passwordField')} === Hash::make($password)) {
+
                     //Estas Dos Lineas Loguean realmente al Usuario			
                     Session::put(Config::get('session/session_name'), $user);
                     Session::put('isLoggedIn', true);
