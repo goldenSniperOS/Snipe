@@ -8,7 +8,7 @@ class Profile {
             'title' => 'Profile',
             'description' => 'El mejor framework creado para ayudar a nuestros usuarios a construir sus webs.',
             'keywords' => 'php, framework, mvc, cms',
-            'author' => 'Snipe Framework Groups',
+            'author' => 'Snipe Framework Groups.',
             'robots' => 'All'
         );
         View::render('profile/index', ['meta' => $meta], $layout);
