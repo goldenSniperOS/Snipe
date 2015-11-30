@@ -119,7 +119,17 @@ return array(
         'userField' => 'username',
         'passwordField' => 'password',
         'foreignGroup' => 'id_profiles'
-    ]
+    ],
+    /*
+      |--------------------------------------------------------------------------
+      | Carga de Modulos
+      |--------------------------------------------------------------------------
+      | Carga los modulos de la carpeta class
+      |
+      |
+      | Ejemplo : ['PHPMailer']
+     */
+      'modules' => [],
 );
 
 

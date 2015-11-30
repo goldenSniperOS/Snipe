@@ -37,6 +37,17 @@ spl_autoload_register(function($class) {
         }
     }
 });
+
+if(isset($configure['modules']) && count($configure['modules']) > 0){
+  foreach ($configure['modules'] as $modulo) {
+    //echo $modulo;
+    foreach (glob("app/classes/".$modulo."/*.php") as $filename)
+    {
+      require_once $filename;
+    }
+  }
+}
+
 session_start();
 
 require_once 'functions/sanitize.php';
