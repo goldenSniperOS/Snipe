@@ -33,7 +33,7 @@ return array(
       | point for web requests into these applications from the outside.
       |
      */
-    'public' => 'http://' . $_SERVER['HTTP_HOST'] . rtrim($_SERVER['PHP_SELF'], 'index.php') . 'public',
+    'public' => Config::get('protocol').'://' . $_SERVER['HTTP_HOST'] . rtrim($_SERVER['PHP_SELF'], 'index.php') . 'public',
     /*
       |--------------------------------------------------------------------------
       | Public Path Absoluto
@@ -54,6 +54,6 @@ return array(
       | is necessary you will do so here, just proceed with some caution.
       |
      */
-    'base' => 'http://' . $_SERVER['HTTP_HOST'] . str_replace('/index.php', '', $_SERVER['PHP_SELF'])
+    'base' => Config::get('protocol').'://' . $_SERVER['HTTP_HOST'] . str_replace('/index.php', '', $_SERVER['PHP_SELF'])
 );
 
