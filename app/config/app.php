@@ -53,7 +53,7 @@ return array(
     'mysql' => [
         'host' => 'localhost',
         'username' => 'root',
-        'password' => 'Cambuche1795!',
+        'password' => '',
         'database' => 'test_fr',
         'charset' => 'utf8',
         'collation' => 'utf8_unicode_ci',
