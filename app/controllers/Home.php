@@ -13,7 +13,6 @@
  */
 
 class Home {
-
     public function index() {
         $layout = "home";
         $meta = array(
@@ -25,5 +24,4 @@ class Home {
         );
         View::render('home/index', ['meta' => $meta], $layout);
     }
-
 }

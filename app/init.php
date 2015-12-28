@@ -10,14 +10,11 @@
   | y se cargará en toda la aplicación
   |
  */
-
-$configure = include 'config' . DIRECTORY_SEPARATOR . 'app.php';
-$configurePath = include 'config' . DIRECTORY_SEPARATOR . 'paths.php';
-
+$packages = require 'app/config/packages.php';
 spl_autoload_register(function($class) {
-    $configure = include 'config' . DIRECTORY_SEPARATOR . 'app.php';
-    if (count($configure['class_exceptions']) != 0) {
-        foreach ($configure['class_exceptions'] as $clase) {
+    $packages = require 'app/config/packages.php';
+    if (count($packages['modules']) != 0) {
+        foreach ($packages['modules'] as $clase) {
             if (!strpos($clase, $class) !== false) {
                 if (file_exists('app/core/' . $class . '.php')) {
                     require_once 'core/' . $class . '.php';
@@ -31,15 +28,15 @@ spl_autoload_register(function($class) {
     }
 
 
-    if ($configure['database_activate'] == true) {
+    if (Config::get('database_activate') == true) {
         if (file_exists('app/models/' . $class . '.php')) {
             require_once 'models/' . $class . '.php';
         }
     }
 });
 
-if(isset($configure['modules']) && count($configure['modules']) > 0){
-  foreach ($configure['modules'] as $modulo) {
+if(count($packages['modules']) > 0){
+  foreach ($packages['modules'] as $modulo) {
     //echo $modulo;
     foreach (glob("app/classes/".$modulo."/*.php") as $filename)
     {
@@ -54,7 +51,9 @@ require_once 'functions/sanitize.php';
 require_once 'functions/assoc.php';
 require_once 'functions/locale.php';
 
-if (isset($_GET['locale'])) {
+
+//Zona En Reparacion Guillermo -
+/*if (isset($_GET['locale'])) {
     $lang = $_GET['locale'];
     $_SESSION['locale'] = $lang;
     setcookie("locale", $lang, time() + (3600 * 24 * 30));
@@ -70,10 +69,10 @@ if (isset($_GET['locale'])) {
     $lang = 'es';
 }
 
-setLocalization($lang);
+setLocalization($lang);*/
 
-date_default_timezone_set($configure['place']);
 
-if ($configure['database_activate'] == false) {
-    include $configurePath['app'] . '/includes/errors/nodatabase.php';
+date_default_timezone_set(Config::get('place'));
+if (Config::get('database_activate') == false) {
+    include Config::path('app') . '/includes/errors/nodatabase.php';
 }

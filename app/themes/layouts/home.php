@@ -6,13 +6,13 @@ if (Session::exists('errores')) {
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <?php require_once Config::path('app') . '/themes/includes/meta.php'; ?>
-        <?php require_once Config::path('app') . '/themes/layouts/home/head.php'; ?>
+        <?php View::add('includes/meta',$meta);?>
+        <?php View::add('layouts/home/head');?>
     </head>
     <body>
         <div id="wrapper">
-            <?php require_once $content; ?>            
+            <?php View::content($content)?>
         </div>
-        <?php require_once Config::path('app') . '/themes/layouts/admin/scripts.php'; ?>
+        <?php View::add('layouts/home/scripts');?>
     </body>
 </html>

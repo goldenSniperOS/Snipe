@@ -13,7 +13,7 @@ return array(
       |
      */
 
-    'app' => substr(__DIR__, 0, strlen(__DIR__) - 7),
+    'app' => dirname(__DIR__),
     /*
       |--------------------------------------------------------------------------
       | Config Path
@@ -33,7 +33,7 @@ return array(
       | point for web requests into these applications from the outside.
       |
      */
-    'public' => Config::get('protocol').'://' . $_SERVER['HTTP_HOST'] . rtrim($_SERVER['PHP_SELF'], 'index.php') . 'public',
+    'public' => ((isset($_SERVER['HTTPS']))?'https':'http').'://' . $_SERVER['HTTP_HOST'] . rtrim($_SERVER['PHP_SELF'], 'index.php') . 'public',
     /*
       |--------------------------------------------------------------------------
       | Public Path Absoluto
@@ -54,6 +54,6 @@ return array(
       | is necessary you will do so here, just proceed with some caution.
       |
      */
-    'base' => Config::get('protocol').'://' . $_SERVER['HTTP_HOST'] . str_replace('/index.php', '', $_SERVER['PHP_SELF'])
+    'base' => ((isset($_SERVER['HTTPS']))?'https':'http').'://' . $_SERVER['HTTP_HOST'] . str_replace('/index.php', '', $_SERVER['PHP_SELF'])
 );
 
