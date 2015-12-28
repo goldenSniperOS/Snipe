@@ -1,4 +1,4 @@
-# SnipeFramework
+# Snipe
 
 
 English
