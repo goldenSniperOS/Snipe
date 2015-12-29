@@ -24,4 +24,37 @@ class Home {
         );
         View::render('home/index', ['meta' => $meta], $layout);
     }
+
+    public function testUsers(){
+      $salt = Hash::salt(32);
+      UsersModel::create([
+        'username' => 'goldensniper',
+        'salt' => $salt,
+        'password' => Hash::make('admin123',$salt),
+      ]);
+
+      $salt = Hash::salt(32);
+      UsersModel::create([
+        'username' => 'anguelsc',
+        'salt' => $salt,
+        'password' => Hash::make('Losmejores',$salt),
+      ]);
+    }
+
+    public function testUpdate(){
+      //$salt = Hash::salt(32);
+      UsersModel::update([
+        'username' => 'goldensniperos'
+      ],1);
+      die();
+      $salt = Hash::salt(32);
+      UsersModel::update([
+        'salt' => $salt,
+        'password' => Hash::make('clave2',$salt),
+      ],2);
+    }
+
+    public function testLogin(){
+
+    }
 }

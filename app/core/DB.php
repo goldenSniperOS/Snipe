@@ -6,8 +6,8 @@ class DB {
     private $_pdo,
             $_query,
             $_error = false,
-            $_results,
-            $_count = 0;
+            $_results = null,
+            $_count = -1;
 
     private function __construct() {
         try {
@@ -66,6 +66,10 @@ class DB {
                     $this->_count = $this->_query->rowCount();
                     if ($this->_query->columnCount()) {
                         $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
+                    }else{
+                        if($this->sql['action'] == "INSERT INTO"){
+                            return $this->_pdo->lastInsertId();    
+                        }
                     }
                 } else {
                     $this->_error = true;
@@ -240,7 +244,12 @@ class DB {
                 $this->sql['fields'] = "VALUES({$values})";
                 $query = implode(" ", $this->sql);
                 //return $this;
-                return !$this->query($query, $fields)->error();
+                $lastID = $this->query($query, $fields);
+                if(!$this->error()){
+                    return $lastID;
+                }else{
+                    return false;
+                }
             }
         } catch (PDOException $e) {
             die($e->getMessage());
@@ -290,7 +299,7 @@ class DB {
             $this->sql['table'] = substr($this->sql['table'], 5);
             $query = implode(" ", $this->sql);
             //return $this;
-            return !$this->query($query, $fields)->error();
+            return $this->query($query, $fields);
         } catch (PDOException $e) {
             die($e->getMessage());
         }
@@ -309,7 +318,15 @@ class DB {
         return false;
     }
 
-    public function count() {
+    public function count($field = null) {
+        if($this->_count == -1 && $this->select['table'] == 'FROM table'){
+            $this->select['join'] = 'SELECT COUNT('.(is_null($field))?'*':$field.') as COUNT';
+            $query = implode(" ", $this->sql);
+            $this->query($query);
+            if ($this->count() > 0) {
+                $this->_count = $this->results()[0];
+            }
+        }
         return $this->_count;
     }
 
