@@ -3,13 +3,8 @@
 class Validate {
 
     private $_passed = false,
-            $_errors = array(),
-            $_db = null;
-
-    public function __construct() {
-        $this->_db = DB::getInstance();
-    }
-
+            $_errors = array();
+            
     public function check($source, $items = array()) {
         foreach ($items as $item => $rules) {
             foreach ($rules as $rule => $rule_value) {
@@ -35,8 +30,9 @@ class Validate {
                             }
                             break;
                         case 'unique':
-                            $check = $this->_db->get($rule_value[0], [array($rule_value[1], "=", $value)]);
-                            if ($check->count()) {
+                            $check = 
+                            $check = DB::getInstance()->table($rule_value[0])->where($rule_value,$value)->count();
+                            if ($check > 0) {
                                 $this->addError($item, 'Este Campo ya fue registrado, intente con otro');
                             }
                             break;
@@ -64,5 +60,4 @@ class Validate {
     public function passed() {
         return $this->_passed;
     }
-
 }

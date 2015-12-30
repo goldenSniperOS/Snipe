@@ -27,26 +27,24 @@ class Home {
 
     public function testUsers(){
       $salt = Hash::salt(32);
-      UsersModel::create([
+      $id = UsersModel::create([
         'username' => 'goldensniper',
         'salt' => $salt,
         'password' => Hash::make('admin123',$salt),
       ]);
 
+      print 'El primero '.$id;
+
       $salt = Hash::salt(32);
-      UsersModel::create([
+      $id = UsersModel::create([
         'username' => 'anguelsc',
         'salt' => $salt,
         'password' => Hash::make('Losmejores',$salt),
       ]);
+      print 'El segundo '.$id;
     }
 
-    public function testUpdate(){
-      //$salt = Hash::salt(32);
-      UsersModel::update([
-        'username' => 'goldensniperos'
-      ],1);
-      die();
+    public function testUpdate(){    
       $salt = Hash::salt(32);
       UsersModel::update([
         'salt' => $salt,
@@ -54,7 +52,10 @@ class Home {
       ],2);
     }
 
-    public function testLogin(){
-
+    public function testeo(){
+      $var = UsersModel::select('username','password');
+      echo '<pre>';
+      var_dump($var);
+      echo '<pre>';
     }
 }

@@ -25,16 +25,14 @@ class Auth {
                     //Estas Dos Lineas Loguean realmente al Usuario			
                     Session::put(Config::get('session/session_name'), $user);
                     Session::put('isLoggedIn', true);
-                     
-                    if (Config::get('groups/active')) {
-                        Session::put('listPermission', self::getPermissions($user));
-                    }
 
-                    if ($remember && Config::get('session/active')) {
-                        $hash = Hash::unique();
-                        $hashCheck = DB::getInstance()->table(Config::get('session/table'))->where(Config::get('session/primaryKey'), $user->{$user->getInfo('primaryKey')})->first();
+                    //Las Sesiones los Grupos y Permisos Solo funcionan con la Plataforma de Usuarios Integrada
+                    if(Config::get('user-platform')){                       
+                        //Verificar si tiene una sesion habilitada                       
+                        $hashCheck = SessionModel::find($user->id,'user_id');
                         if ($hashCheck == null) {
-                            DB::getInstance()->table(Config::get('session/table'))->insert([
+                            $hash = Hash::unique();
+                            SessionModel::create([
                                 Config::get('session/primaryKey') => $user->{$user->getInfo('primaryKey')},
                                 Config::get('session/hashField') => $hash
                             ]);
@@ -43,6 +41,7 @@ class Auth {
                         }
                         Cookie::put(Config::get('remember/cookie_name'), $hash, Config::get('remember/cookie_expiry'));
                     }
+                    
                     return true;
                 }
             }
@@ -67,19 +66,10 @@ class Auth {
         Cookie::delete(Config::get('remember/cookie_name'));
     }
 
-    public static function getPermissions($user = null) {
-        if ($user && Config::get('groups/active')) {
-            $foreignGroup = Config::get('user/foreignGroup');
-            $grupo = DB::getInstance()->table(Config::get('groups/table'))->where(Config::get('groups/primaryKey'), $user->{$foreignGroup})->first();
-            return json_decode($grupo->{Config::get('groups/permissionField')});
-        }
-        return false;
-    }
-
     public static function updatePermissions() {
-        if (Session::exists('isLoggedIn') && Session::exists(Config::get('session/session_name'))) {
-            $foreignGroup = Config::get('user/foreignGroup');
+        if (Session::exists('isLoggedIn') && Session::exists(Config::get('session/session_name') && Config::get())) {
             $user = Session::get(Config::get('session/session_name'));
+            $permission = json_decode($user->permissions);
             if (property_exists($user, $foreignGroup)) {
                 if ($user && Config::get('groups/active')) {
                     $grupo = DB::getInstance()->table(Config::get('groups/table'))->where(Config::get('groups/primaryKey'), $user->{$foreignGroup})->first();
@@ -91,7 +81,7 @@ class Auth {
     }
 
     public function hasPermission($key = null) {
-        if (Config::get('groups/active')) {
+        if (Config::get('user-platform')) {
             if (Session::exists('listPermission')) {
                 if (property_exists(Session::get('listPermission'), $key)) {
                     return Session::get('listPermission')->{$key};

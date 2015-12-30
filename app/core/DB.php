@@ -23,8 +23,9 @@ class DB {
         }
     }
 
-    protected function tableLock() {
+    public function tableLock() {
         $this->_tableLock = true;
+        return $this;
     }
 
     public function getLock() {
@@ -68,7 +69,7 @@ class DB {
                         $this->_results = $this->_query->fetchAll(PDO::FETCH_OBJ);
                     }else{
                         if($this->sql['action'] == "INSERT INTO"){
-                            return $this->_pdo->lastInsertId();    
+                            return $this->_pdo->lastInsertId();
                         }
                     }
                 } else {
@@ -82,8 +83,7 @@ class DB {
     }
 
     public function where() {
-        if (func_num_args() > 0)
-            ; {
+        if (func_num_args() > 0){
             if (func_num_args() == 2) {
                 $field = func_get_arg(0);
                 $operator = '=';
@@ -105,8 +105,7 @@ class DB {
     }
 
     public function orWhere() {
-        if (func_num_args() > 0)
-            ; {
+        if (func_num_args() > 0){
             if (func_num_args() == 2) {
                 $field = func_get_arg(0);
                 $operator = '=';

@@ -16,8 +16,11 @@ class Eloquent {
     }
 
     public static function create($fields = array()) {
-        if (!DB::getInstance()->table(static::$table)->insert($fields)) {
+        $id = DB::getInstance()->table(static::$table)->insert($fields);
+        if (!$id) {
             throw new Exception('Hubo un Problema Registrando ' . get_called_class());
+        }else{
+            return $id; 
         }
     }
 
@@ -41,8 +44,7 @@ class Eloquent {
     }
 
     public static function where() {
-        if (func_num_args() > 0)
-            ; {
+        if (func_num_args() > 0){
             $clase = get_called_class();
 
             if (func_num_args() == 2) {
@@ -59,17 +61,31 @@ class Eloquent {
         }
     }
 
-    public function join($table, $primarykey, $operator, $foreignkey) {
+    public static function select() {
+        if (func_num_args() > 0){
+            $args = func_get_args();
+            var_dump($args);
+            $_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->select($args[0]);
+            unset($args[0]);
+            foreach ($args as $arg) {
+
+                $_instanceDB->select($arg);
+            }
+            return $_instanceDB;
+        }
+    }
+
+    public static function join($table, $primarykey, $operator, $foreignkey) {
         $_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->join($table, $primarykey, $operator, $foreignkey);
         return $_instanceDB;
     }
 
-    public function rightJoin($table, $primarykey, $operator, $foreignkey) {
+    public static function rightJoin($table, $primarykey, $operator, $foreignkey) {
         $_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->rightJoin($table, $primarykey, $operator, $foreignkey);
         return $_instanceDB;
     }
 
-    public function leftJoin($table, $primarykey, $operator, $foreignkey) {
+    public static function leftJoin($table, $primarykey, $operator, $foreignkey) {
         $_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->leftJoin($table, $primarykey, $operator, $foreignkey);
         return $_instanceDB;
     }

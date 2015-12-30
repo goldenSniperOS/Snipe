@@ -84,28 +84,18 @@ return array(
       |
      */
     'session' => [
-        'active' => false,
         'session_name' => 'user',
         'token_name' => 'token',
-        'table' => 'sesiones',
-        'primaryKey' => 'Usuario',
-        'hashField' => 'Hash'
     ],
     /*
       |--------------------------------------------------------------------------
-      | Grupos de Usuarios por Permiso
+      | Plataforma de Usuarios integrada
       |--------------------------------------------------------------------------
-      | Esta tabla Identifica a los Usuarios por permiso, para reservar areas de
-      | administrador o usuario cliente sea el caso necesario, Si el valor de active
-      | es 'false' Funcionará como una autenticación normal
-      |
+      | Snipe tiene una plataforma de usuarios incluida, para cualquier tipo de aplicación que necesites, 
+      | si deseas usarla puedes colocarle true a a la variable o false, si deseas implementar tu propia 
+      | plataforma. Esta plataforma le dará mantenimiento a todos los usuarios.
      */
-    'groups' => [
-        'active' => false,
-        'table' => 'grupo',
-        'primaryKey' => 'id',
-        'permissionField' => 'Permisos',
-    ],
+    'user-platform' => true,
     /*
       |--------------------------------------------------------------------------
       | Clase de Usuarios
@@ -118,7 +108,6 @@ return array(
         'user_class' => 'UsersModel',
         'userField' => 'username',
         'passwordField' => 'password',
-        'foreignGroup' => 'id_profiles'
     ],
     /*
       |--------------------------------------------------------------------------
