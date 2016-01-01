@@ -65,12 +65,8 @@ class Eloquent {
         if (func_num_args() > 0){
             $args = func_get_args();
             var_dump($args);
-            $_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->select($args[0]);
-            unset($args[0]);
-            foreach ($args as $arg) {
-
-                $_instanceDB->select($arg);
-            }
+            $_instanceDB = DB::getInstance()->table(static::$table)->tableLock();
+            $_instanceDB = call_user_method('select', $_instanceDB,$args);
             return $_instanceDB;
         }
     }

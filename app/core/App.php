@@ -2,17 +2,17 @@
 
 class App {
 
-    protected $controller = 'home';
+    protected $controller = 'Home';
     protected $method = 'index';
     protected $params = [];
 
     function __construct() {
         $url = $this->parseURL();
         if (isset($url[0])) {
-            if (file_exists('app/controllers/' . $url[0] . '.php')) {
+            if (file_exists(Config::path('app').'/controllers/' . $url[0] . '.php')) {
                 $this->controller = $url[0];
                 unset($url[0]);
-                require_once 'app/controllers/' . $this->controller . '.php';
+                require_once Config::path('app').'/controllers/' . $this->controller . '.php';
                 $this->controller = new $this->controller;
                 if (isset($url[1])) {
                     if (method_exists($this->controller, $url[1])) {
@@ -29,7 +29,7 @@ class App {
                 Redirect::to(404);
             }
         } else {
-            require_once 'app/controllers/' . $this->controller . '.php';
+            require_once Config::path('app').'/controllers/' . $this->controller . '.php';
             $this->controller = new $this->controller;
             $this->params = [];
             call_user_func_array([$this->controller, $this->method], $this->params);
