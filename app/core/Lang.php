@@ -3,7 +3,7 @@
 class Lang {
     public static function get($key) {
         if ($path) {
-            $lang = require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'locale' . DIRECTORY_SEPARATOR . Session::get('locale') . '.php';
+            $lang = require Config::get('app') . DIRECTORY_SEPARATOR . 'locale' . DIRECTORY_SEPARATOR . Session::get('locale') . '.php';
             foreach ($path as $bit) {
                 if (isset($config[$bit])) {
                     $config = $config[$bit];
@@ -16,7 +16,7 @@ class Lang {
 
     public static function getLang() {
         if (Session::exists('locale')) {
-            $lang = require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'locale' . DIRECTORY_SEPARATOR . Session::get('locale') . '.php';
+            $lang = require Config::get('app') . DIRECTORY_SEPARATOR . 'locale' . DIRECTORY_SEPARATOR . Session::get('locale') . '.php';
             return $lang;
         }
         return false;

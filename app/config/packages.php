@@ -9,5 +9,5 @@ return array(
       |
       | Ejemplo : ['PHPMailer']
      */
-      'modules' => [],
+      'modules' => []
 );

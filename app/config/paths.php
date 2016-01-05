@@ -43,7 +43,7 @@ return array(
       | carpeta public para su necesidad
       |
      */
-    'public_absolute' => substr(__DIR__, 0, strlen(__DIR__) - 10) . 'public' . DIRECTORY_SEPARATOR,
+    'public_absolute' => dirname(__DIR__,2) . 'public' . DIRECTORY_SEPARATOR,
     /*
       |--------------------------------------------------------------------------
       | Base Path
@@ -56,4 +56,3 @@ return array(
      */
     'base' => ((isset($_SERVER['HTTPS']))?'https':'http').'://' . $_SERVER['HTTP_HOST'] . str_replace('/index.php', '', $_SERVER['PHP_SELF'])
 );
-

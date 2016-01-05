@@ -109,16 +109,6 @@ return array(
         'userField' => 'username',
         'passwordField' => 'password',
     ],
-    /*
-      |--------------------------------------------------------------------------
-      | Carga de Modulos
-      |--------------------------------------------------------------------------
-      | Carga los modulos de la carpeta class
-      |
-      |
-      | Ejemplo : ['PHPMailer']
-     */
-      'modules' => [],
 );
 
 
