@@ -14,7 +14,7 @@ class File
 	function __construct($file,$constraints = null)
 	{
 		$this->_file = $file;
-		$this->_extension = pathinfo($file['name'],PATHINFO_EXTENSION);
+		$this->_extension = strtolower(pathinfo($file['name'],PATHINFO_EXTENSION));
 		$this->_name = basename($file['name']);
 		$this->_size = $file['size'];
 		
@@ -71,14 +71,15 @@ class File
 	private function checkConstraints(){
 		foreach ($this->_constraints as $param => $constraint) {
 			switch ($param) {
-				case 'format':
+				case 'formats':
 					$allowFormats = explode("|",$constraint);
 					if(array_search($this->_extension, $allowFormats) === false){
-						echo 'El Archivo excede';
+						echo 'El Archivo no corresponde con el formato';
 						return false;
 					}
 					break;
 				case 'maxsize':
+					var_dump($this->_size);
 					if($this->_size >= $constraint){
 						echo 'El Archivo excede';
 						return false;
@@ -111,7 +112,7 @@ class File
 	public function name($name){
 		$analyzer = explode('.', $name);
 		if(count($analyzer) == 2){
-			$this->_extension = $analyzer[1];
+			$this->_extension = strtolower($analyzer[1]);
 			$this->_name = $analyzer[0].'.'.$this->_extension;
 			return $this;
 		}

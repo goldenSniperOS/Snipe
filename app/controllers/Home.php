@@ -59,13 +59,15 @@ class Home {
       echo '<pre>';
     }
 
+    //Testeo de Formulario de Archivos
     public function testform(){
       View::render('form');
     }
 
+    //Testeo de Archivos
     public function subirdata(){
       $targetdir = Config::path('public_absolute').'carpeta';
       File::folder($targetdir);
-      var_dump(File::upload('archivo',$targetdir));
+      var_dump(File::upload('archivo',$targetdir,['formats' => 'png|jpg','maxsize' => 1000,'unique' => true]));
     }
 }
