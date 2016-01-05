@@ -13,7 +13,7 @@ return array(
       |
      */
 
-    'app' => dirname(__DIR__),
+    'app' => dirname(__DIR__). DIRECTORY_SEPARATOR,
     /*
       |--------------------------------------------------------------------------
       | Config Path
@@ -43,7 +43,7 @@ return array(
       | carpeta public para su necesidad
       |
      */
-    'public_absolute' => dirname(__DIR__,2) . 'public' . DIRECTORY_SEPARATOR,
+    'public_absolute' => dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR. 'public' . DIRECTORY_SEPARATOR,
     /*
       |--------------------------------------------------------------------------
       | Base Path

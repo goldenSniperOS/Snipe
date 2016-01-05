@@ -14,8 +14,8 @@ class File
 	function __construct($file,$constraints = null)
 	{
 		$this->_file = $file;
+		$this->_extension = pathinfo($file['name'],PATHINFO_EXTENSION);
 		$this->_name = basename($file['name']);
-		$this->_extension = pathinfo($this->_name,PATHINFO_EXTENSION);
 		$this->_size = $file['size'];
 		
 		if(isset($constraints)){
@@ -31,16 +31,24 @@ class File
 			$object = new File($nameFile);
 			return $object;
 		}
+		echo 'El archivo no Existe';
 		return false;	
 	}
 
-	public static function upload($nameFile,$targetdir,$constraints = []){
+	public static function upload($nameFile,$targetdir,$constraints = [],$customName = null){
 		if(isset($_FILES[$nameFile])){
 			$file = $_FILES[$nameFile];
-			$object = new File($nameFile,$constraints);
+			$object = new File($file,$constraints);
 			if($object->target($targetdir)){
+				if(isset($customName)){
+					$object->name($customName);
+				}
 				$object->save();
+				return true;
 			}
+			echo 'La ruta no Existe';
+		}else{
+			echo 'El archivo no Existe';	
 		}
 		return false;
 	}
@@ -56,6 +64,7 @@ class File
 			echo 'Target Passed';
 			return $this;
 		}
+		echo 'La ruta no Existe';
 		return false;
 	}
 
@@ -65,16 +74,19 @@ class File
 				case 'format':
 					$allowFormats = explode("|",$constraint);
 					if(array_search($this->_extension, $allowFormats) === false){
+						echo 'El Archivo excede';
 						return false;
 					}
 					break;
 				case 'maxsize':
 					if($this->_size >= $constraint){
+						echo 'El Archivo excede';
 						return false;
 					}
 					break;
 				case 'unique':
-					if(file_exists($this->_targetfile)){
+					if(file_exists($this->_targetfile) && $constraint){
+						echo 'El archivo ya existe';
 						return false;
 					}
 					break;
@@ -88,17 +100,23 @@ class File
 	}
 
 	public static function folder($targetdir){
-		if (!file_exists($target_dir)) {
-            if (!mkdir($target_dir, 0777, true)) {
+		if (!file_exists($targetdir)) {
+            if (!mkdir($targetdir, 0777, true)) {
                 die('Create Folder Failed...');
             }
+            return true;
         }
 	}
 
 	public function name($name){
-		$this->_name = $name;
-		$this->_extension = pathinfo($this->_name,PATHINFO_EXTENSION);
-		return $this;
+		$analyzer = explode('.', $name);
+		if(count($analyzer) == 2){
+			$this->_extension = $analyzer[1];
+			$this->_name = $analyzer[0].'.'.$this->_extension;
+			return $this;
+		}
+		echo 'Nombre de archivo mal escrito';
+		return false;
 	}
 
 	public function save(){
@@ -107,6 +125,7 @@ class File
 			echo 'Upload Passed';
 			return true;	
 		}
+		echo 'Error al guardar';
 		return false;
 	}
 

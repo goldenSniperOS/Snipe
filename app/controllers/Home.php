@@ -59,7 +59,13 @@ class Home {
       echo '<pre>';
     }
 
+    public function testform(){
+      View::render('form');
+    }
+
     public function subirdata(){
-      
+      $targetdir = Config::path('public_absolute').'carpeta';
+      File::folder($targetdir);
+      var_dump(File::upload('archivo',$targetdir));
     }
 }
