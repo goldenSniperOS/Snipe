@@ -49,28 +49,9 @@ session_start();
 
 require_once 'functions/sanitize.php';
 require_once 'functions/assoc.php';
-require_once 'functions/locale.php';
 
-
-//Zona En Reparacion Guillermo -
-/*if (isset($_GET['locale'])) {
-    $lang = $_GET['locale'];
-    $_SESSION['locale'] = $lang;
-    setcookie("locale", $lang, time() + (3600 * 24 * 30));
-} else if (isset($_POST["locale"])) {
-    $lang = $_POST['locale'];
-    $_SESSION['locale'] = $lang;
-    setcookie("locale", $lang, time() + (3600 * 24 * 30));
-}else if (isset($_SESSION['locale'])) {
-    $lang = $_SESSION['locale'];
-} else if (isset($_COOKIE['locale'])) {
-    $lang = $_COOKIE['locale'];
-} else {
-    $lang = 'es';
-}
-
-setLocalization($lang);*/
-
+//Inicializat el Lenguaje
+Lang::init('en');
 
 date_default_timezone_set(Config::get('place'));
 if (Config::get('database_activate') == false) {

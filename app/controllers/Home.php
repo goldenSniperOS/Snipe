@@ -58,4 +58,8 @@ class Home {
       var_dump($var);
       echo '<pre>';
     }
+
+    public function subirdata(){
+      
+    }
 }

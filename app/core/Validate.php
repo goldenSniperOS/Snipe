@@ -30,7 +30,6 @@ class Validate {
                             }
                             break;
                         case 'unique':
-                            $check = 
                             $check = DB::getInstance()->table($rule_value[0])->where($rule_value,$value)->count();
                             if ($check > 0) {
                                 $this->addError($item, 'Este Campo ya fue registrado, intente con otro');
@@ -45,6 +44,8 @@ class Validate {
         }
         if (empty(($this->errors()))) {
             $this->_passed = true;
+        }else{
+            $this->_fields = $source;
         }
         return $this;
     }
@@ -55,6 +56,13 @@ class Validate {
 
     public function errors() {
         return $this->_errors;
+    }
+
+    public function field($field = null) {
+        if(!is_null($field)){
+            return $this->_fields[$field];    
+        }
+        return $this->_fields;
     }
 
     public function passed() {
