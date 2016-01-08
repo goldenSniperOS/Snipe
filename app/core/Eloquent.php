@@ -122,6 +122,10 @@ class Eloquent {
         return DB::getInstance()->table(static::$table)->get();
     }
 
+    public static function count(){
+        return DB::getInstance()->table(static::$table)->count();
+    }
+
     public function getInfo($attrib = null) {
         if ($attrib)
             return static::$$attrib;

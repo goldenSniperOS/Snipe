@@ -11,7 +11,7 @@ if (Session::exists('errores')) {
     </head>
     <body>
         <div id="wrapper">
-            <?php View::content($content)?>
+            <?php require_once $content; ?>
         </div>
         <?php View::add('layouts/home/scripts');?>
     </body>

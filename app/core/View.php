@@ -16,8 +16,4 @@ class View {
         $rutaCorrecta = implode(DIRECTORY_SEPARATOR,$rutas);
     	require_once Config::path('app') .DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$rutaCorrecta.'.php';
     }
-
-    public static function content($content){
-    	require_once $content;
-    }
 }
