@@ -1,5 +1,16 @@
 <?php
-
+/**
+* Clase para crear modelos ORM
+*   
+*   Ejemplo para obtener el id:
+*   $salt = Hash::salt(32);
+*   $id = UsersModel::create([
+*      'username' => 'anguelsc',
+*      'salt' => $salt,
+*      'password' => Hash::make('Losmejores',$salt),
+*   ]);
+*
+*/
 class Eloquent {
 
     protected static $table = null,
@@ -43,22 +54,26 @@ class Eloquent {
         return null;
     }
 
-    public static function where() {
+    public function where() {
         if (func_num_args() > 0){
-            $clase = get_called_class();
-
-            if (func_num_args() == 2) {
-                $field = func_get_arg(0);
-                $operator = '=';
-                $value = func_get_arg(1);
-            } else {
-                $field = func_get_arg(0);
-                $operator = func_get_arg(1);
-                $value = func_get_arg(2);
+            if(is_callable(func_get_arg(0))){
+                $_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->where(func_get_arg(0));
+            }else{
+                if (func_num_args() == 2) {
+                    $field = func_get_arg(0);
+                    $operator = '=';
+                    $value = func_get_arg(1);
+                } else {
+                    $field = func_get_arg(0);
+                    $operator = func_get_arg(1);
+                    $value = func_get_arg(2);
+                }    
+                //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
+                $_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->where($field, $operator, $value);
             }
-            $_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->where($field, $operator, $value);
-            return $_instanceDB;
+            return $this;
         }
+        return false;
     }
 
     public static function select() {

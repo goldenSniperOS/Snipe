@@ -14,60 +14,13 @@
 
 class Home {
     public function index() {
-        $layout = "home";
         $meta = array(
             'title' => 'Home',
-            'description' => 'El mejor framework creado para ayudar a nuestros usuarios a construir sus webs.',
-            'keywords' => 'php, framework, mvc, cms',
+            'description' => 'Un Framework para todos',
+            'keywords' => 'php, framework, mvc, orm,eloquent,laravel',
             'author' => 'Snipe Framework Group.',
             'robots' => 'All'
         );
-        View::render('home/index', ['meta' => $meta], $layout);
-    }
-
-    public function testUsers(){
-      $salt = Hash::salt(32);
-      $id = UsersModel::create([
-        'username' => 'goldensniper',
-        'salt' => $salt,
-        'password' => Hash::make('admin123',$salt),
-      ]);
-
-      print 'El primero '.$id;
-
-      $salt = Hash::salt(32);
-      $id = UsersModel::create([
-        'username' => 'anguelsc',
-        'salt' => $salt,
-        'password' => Hash::make('Losmejores',$salt),
-      ]);
-      print 'El segundo '.$id;
-    }
-
-    public function testUpdate(){    
-      $salt = Hash::salt(32);
-      UsersModel::update([
-        'salt' => $salt,
-        'password' => Hash::make('clave2',$salt),
-      ],2);
-    }
-
-    public function testeo(){
-      $var = UsersModel::select('username','password');
-      echo '<pre>';
-      var_dump($var);
-      echo '<pre>';
-    }
-
-    //Testeo de Formulario de Archivos
-    public function testform(){
-      View::render('form');
-    }
-
-    //Testeo de Archivos
-    public function subirdata(){
-      $targetdir = Config::path('public_absolute').'carpeta';
-      File::folder($targetdir);
-      var_dump(File::upload('archivo',$targetdir,['formats' => 'png|jpg','maxsize' => 1000,'unique' => true]));
+        View::render('home/index', ['meta' => $meta]);
     }
 }

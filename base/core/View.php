@@ -2,9 +2,9 @@
 class View {
     public static function render($view, $data = [], $layout = null) {
         extract($data, EXTR_PREFIX_SAME, "wddx");
-        $content = Config::path('app') . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $view . '.php';
+        $content = Path::to('app') . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $view . '.php';
         if($layout){
-        	require_once Config::path('app') . DIRECTORY_SEPARATOR . 'themes/layouts' . DIRECTORY_SEPARATOR . $layout . '.php';
+        	require_once Path::to('app') . DIRECTORY_SEPARATOR . 'layouts' . DIRECTORY_SEPARATOR . $layout . '.php';
         }else{
         	require_once $content;
         }
@@ -14,6 +14,6 @@ class View {
         extract($data, EXTR_PREFIX_SAME, "wddx");
         $rutas = explode('/', $route);
         $rutaCorrecta = implode(DIRECTORY_SEPARATOR,$rutas);
-    	require_once Config::path('app') .DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$rutaCorrecta.'.php';
+    	require_once Path::to('app') .DIRECTORY_SEPARATOR.'layouts'.DIRECTORY_SEPARATOR.'includes'.DIRECTORY_SEPARATOR.$rutaCorrecta.'.php';
     }
 }

@@ -8,9 +8,9 @@ class Redirect {
                 switch ($location) {
                     case 404:
                         header('HTTP/1.0 404 Not Found');
-                        include Config::path('app') . '/includes/errors/404.php';
+                        include Path::to('app') .DIRECTORY_SEPARATOR.'layouts'.DIRECTORY_SEPARATOR.'errors'.DIRECTORY_SEPARATOR.'404.php';
                         exit();
-                        break;
+                    break;
                 }
             }
             header('Location: ' . URL::to($location));

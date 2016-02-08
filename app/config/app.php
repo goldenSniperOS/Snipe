@@ -3,25 +3,14 @@
 return array(
     /*
       |--------------------------------------------------------------------------
-      | Activador de Base de Datos
+      | Lenguaje por defecto
       |--------------------------------------------------------------------------
       |
-      | Depende de este valor como 'true' para activar la conexion a la base o
-      | 'false' para desactivarla
+      | Esta opcion, setea por defecto el lenguaje del sistema segun los archivos que estan en
+      | la carpeta locale.
       |
      */
-    'database_activate' => true,
-    /*
-      |--------------------------------------------------------------------------
-      | Excepción de Clases en El Autoloader
-      |--------------------------------------------------------------------------
-      |
-      | En este Array puedes colocar, las clases que no desees considerar en el Autoloader.
-      | Colocando un * delante el nombre de la clase, no se agregarán todas las que contengan,
-      | ese nombre
-      |
-     */
-    'class_exceptions' => [],
+    'default_lang' => 'en',
     /*
       |--------------------------------------------------------------------------
       | Activador de Errores Base de Datos
@@ -31,7 +20,7 @@ return array(
       | errores en alguna consulta o cualquier error referente a la base de datos
       |
      */
-    'database_errors' => false,
+    'database_errors' => true,
     /*
       |--------------------------------------------------------------------------
       | Zona Horaria en la Aplicación
@@ -68,46 +57,40 @@ return array(
       | Por Cada Usuario Logueado, y su Tiempo de expiración
       |
      */
-    'remember' => [
-        'cookie_name' => 'hash',
-        'cookie_expiry' => 604800
+    'cookies' => [
+        'default_cookie_expiry' => 604800
     ],
     /*
       |--------------------------------------------------------------------------
-      | Variables de Sesión - Tabla de Sesiones en Base de Datos - Recordar Siempre
+      | Variables de Sesión de Usuario
       |--------------------------------------------------------------------------
       |
-      | Se utiliza para conocer el nombre de el Token de Formulario
-      | Y el nombre de la variable de sesion que mantiene el hash del usuario logueado,
-      | Si active esta desactivado, la sesión termina en el tiempo que una sesión
-      | termina por defecto en la configuración de PHP
+      | Estas variables de sesion contienen: La variable donde se almacenarán los datos,
+      | del usuario logueado y el token generado por Token::generate() dentro de un formulario.
+      | Se recomienda no alterarlas
       |
      */
     'session' => [
         'session_name' => 'user',
         'token_name' => 'token',
     ],
-    /*
-      |--------------------------------------------------------------------------
-      | Plataforma de Usuarios integrada
-      |--------------------------------------------------------------------------
-      | Snipe tiene una plataforma de usuarios incluida, para cualquier tipo de aplicación que necesites, 
-      | si deseas usarla puedes colocarle true a a la variable o false, si deseas implementar tu propia 
-      | plataforma. Esta plataforma le dará mantenimiento a todos los usuarios.
-     */
-    'user-platform' => true,
+
     /*
       |--------------------------------------------------------------------------
       | Clase de Usuarios
       |--------------------------------------------------------------------------
       | Selecciona el nombre del Modelo que llevara el control de los Usuarios y Los nombres
       | de las Variables de Sesion que contienen la lista de Permisos y Si el usuario esta
-      | Logueado o no
+      | Logueado o no. La opcion hash active, determina si el sistema de encriptacion sera por
+      | hash o no, y si este fuera, deberia tener un campo extra llamado salt. Si no es asi, el
+      | logueo de usuario sera por campo usuario y contraseña
      */
     'user' => [
+        'hash_active' => true,
         'user_class' => 'UsersModel',
         'userField' => 'username',
         'passwordField' => 'password',
+        'saltField' => 'salt',
     ],
 );
 

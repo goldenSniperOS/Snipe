@@ -42,6 +42,7 @@ class DB {
         self::$_instance->sql['order'] = '';
         self::$_instance->sql['limit'] = '';
         self::$_instance->_tableLock = false;
+        self::$_instance->_fields = [];
     }
 
     public static function getInstance() {
@@ -50,6 +51,16 @@ class DB {
         }
         self::initQuery();
         return self::$_instance;
+    }
+
+    private function addParam($param){
+        if(is_array($param)){
+            foreach ($param as $val) {
+                $this->_fields[] = $val;
+            }
+        }else{
+            $this->_fields[] = $param;    
+        }        
     }
 
     public function query($sql, $params = array()) {
@@ -84,21 +95,28 @@ class DB {
 
     public function where() {
         if (func_num_args() > 0){
-            if (func_num_args() == 2) {
-                $field = func_get_arg(0);
-                $operator = '=';
-                $value = func_get_arg(1);
-            } else {
-                $field = func_get_arg(0);
-                $operator = func_get_arg(1);
-                $value = func_get_arg(2);
-            }
-
-            $value = (is_numeric($value)) ? $value : '"' . $value . '"';
-            if ($this->sql['where'] == '') {
-                $this->sql['where'] = 'WHERE ' . $field . ' ' . $operator . ' ' . $value;
-            } else {
-                $this->sql['where'] .= ' AND ' . $field . ' ' . $operator . ' ' . $value;
+            if(is_callable(func_get_arg(0))){
+                $wheres = new Where();
+                call_user_func_array(func_get_arg(0), [$wheres]);
+                $this->sql['where'] .= ' AND '. $wheres->getQuery();
+                $this->addParam($wheres->getParams());
+            }else{
+                if (func_num_args() == 2) {
+                    $field = func_get_arg(0);
+                    $operator = '=';
+                    $value = func_get_arg(1);
+                } else {
+                    $field = func_get_arg(0);
+                    $operator = func_get_arg(1);
+                    $value = func_get_arg(2);
+                }    
+                //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
+                $this->addParam($value);
+                if ($this->sql['where'] == '') {
+                    $this->sql['where'] = 'WHERE `' . $field . '` ' . $operator . ' ' . '?';
+                } else {
+                    $this->sql['where'] .= ' AND `' . $field . '` ' . $operator . ' ' . '?';
+                }
             }
             return $this;
         }
@@ -106,21 +124,28 @@ class DB {
 
     public function orWhere() {
         if (func_num_args() > 0){
-            if (func_num_args() == 2) {
-                $field = func_get_arg(0);
-                $operator = '=';
-                $value = func_get_arg(1);
-            } else {
-                $field = func_get_arg(0);
-                $operator = func_get_arg(1);
-                $value = func_get_arg(2);
-            }
-
-            $value = (is_numeric($value)) ? $value : '"' . $value . '"';
-            if ($this->sql['where'] == '') {
-                $this->sql['where'] = 'WHERE ' . $field . ' ' . $operator . ' ' . $value;
-            } else {
-                $this->sql['where'] .= ' OR ' . $field . ' ' . $operator . ' ' . $value;
+            if(is_callable(func_get_arg(0))){
+                $wheres = new Where();
+                call_user_func_array(func_get_arg(0), [$wheres]);
+                $this->sql['where'] .= ' OR '. $wheres->getQuery();
+                $this->addParam($wheres->getParams());
+            }else{
+                if (func_num_args() == 2) {
+                    $field = func_get_arg(0);
+                    $operator = '=';
+                    $value = func_get_arg(1);
+                } else {
+                    $field = func_get_arg(0);
+                    $operator = func_get_arg(1);
+                    $value = func_get_arg(2);
+                }    
+                //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
+                $this->addParam($value);
+                if ($this->sql['where'] == '') {
+                    $this->sql['where'] = 'WHERE `' . $field . '` ' . $operator . ' ' . '?';
+                } else {
+                    $this->sql['where'] .= ' OR `' . $field . '` ' . $operator . ' ' . '?';
+                }
             }
             return $this;
         }
@@ -159,17 +184,17 @@ class DB {
     }
 
     public function join($table, $primarykey, $operator, $foreignkey) {
-        $this->sql['join'] += ' INNER JOIN ' . $table . ' ON ' . $primarykey . $operator . $foreignkey;
+        $this->sql['join'] .= ' INNER JOIN ' . $table . ' ON `' . $primarykey .'` '. $operator .' `'. $foreignkey.'`';
         return $this;
     }
 
     public function leftJoin($table, $primarykey, $operator, $foreignkey) {
-        $this->sql['join'] += ' LEFT JOIN ' . $table . ' ON ' . $primarykey . $operator . $foreignkey;
+        $this->sql['join'] .= ' LEFT JOIN ' . $table . ' ON `' . $primarykey .'` '. $operator .' `'. $foreignkey.'`';
         return $this;
     }
 
     public function rightJoin($table, $primarykey, $operator, $foreignkey) {
-        $this->sql['join'] += ' RIGHT JOIN ' . $table . ' ON ' . $primarykey . $operator . $foreignkey;
+        $this->sql['join'] .= ' RIGHT JOIN ' . $table . ' ON `' . $primarykey .'` '. $operator .' `'. $foreignkey.'`';
         return $this;
     }
 
@@ -206,7 +231,7 @@ class DB {
 
     public function get() {
         $query = implode(" ", $this->sql);
-        return $this->query($query)->results();
+        return $this->query($query,$this->_fields)->results();
     }
 
     public function first() {
@@ -233,14 +258,17 @@ class DB {
                     $x++;
                 }
                 $this->sql['action'] = "INSERT INTO";
+                
                 if ($fields) {
-                    if (isAssoc($fields)) {
+                    if (Tools::arrayAssoc($fields)) {
                         $this->sql['table'] = substr($this->sql['table'], 5) . "(`" . implode('`, `', $keys) . "`)";
                     } else {
                         $this->sql['table'] = substr($this->sql['table'], 5);
                     }
                 }
+                
                 $this->sql['fields'] = "VALUES({$values})";
+                //Debug::varDump($this->sql);
                 $query = implode(" ", $this->sql);
                 //return $this;
                 $lastID = $this->query($query, $fields);

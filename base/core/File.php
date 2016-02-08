@@ -1,4 +1,15 @@
 <?php
+/**
+*	Clase para subir archivos y crear carpetas
+*	Ejemplo en functionamiento
+*	$targetdir = Path::to('public').'carpeta';
+*   File::folder($targetdir);
+*   File::upload('archivo',$targetdir,['formats' => 'png|jpg','maxsize' => 1000,'unique' => true],'nombre_personalizado.jpg');
+*
+*
+*
+*/
+
 class File
 {
 	private $_file = null,
@@ -31,7 +42,7 @@ class File
 			$object = new File($nameFile);
 			return $object;
 		}
-		echo 'El archivo no Existe';
+		//echo 'El archivo no Existe';
 		return false;	
 	}
 
@@ -46,9 +57,9 @@ class File
 				$object->save();
 				return true;
 			}
-			echo 'La ruta no Existe';
+			//echo 'La ruta no Existe';
 		}else{
-			echo 'El archivo no Existe';	
+			//echo 'El archivo no Existe';	
 		}
 		return false;
 	}
@@ -64,7 +75,7 @@ class File
 			echo 'Target Passed';
 			return $this;
 		}
-		echo 'La ruta no Existe';
+		//echo 'La ruta no Existe';
 		return false;
 	}
 
@@ -74,20 +85,20 @@ class File
 				case 'formats':
 					$allowFormats = explode("|",$constraint);
 					if(array_search($this->_extension, $allowFormats) === false){
-						echo 'El Archivo no corresponde con el formato';
+						//echo 'El Archivo no corresponde con el formato';
 						return false;
 					}
 					break;
 				case 'maxsize':
 					var_dump($this->_size);
 					if($this->_size >= $constraint){
-						echo 'El Archivo excede';
+						//echo 'El Archivo excede';
 						return false;
 					}
 					break;
 				case 'unique':
 					if(file_exists($this->_targetfile) && $constraint){
-						echo 'El archivo ya existe';
+						//echo 'El archivo ya existe';
 						return false;
 					}
 					break;
@@ -96,14 +107,14 @@ class File
 					break;
 			}
 		}
-		echo 'Constraints Passed';
+		//echo 'El Archivo es correcto';
 		return true;
 	}
 
 	public static function folder($targetdir){
 		if (!file_exists($targetdir)) {
             if (!mkdir($targetdir, 0777, true)) {
-                die('Create Folder Failed...');
+                die('Fallo al crear la carpeta...');
             }
             return true;
         }
@@ -116,17 +127,17 @@ class File
 			$this->_name = $analyzer[0].'.'.$this->_extension;
 			return $this;
 		}
-		echo 'Nombre de archivo mal escrito';
+		//echo 'Nombre de archivo mal escrito o no se encuentra';
 		return false;
 	}
 
 	public function save(){
 		$this->_targetfile = $this->_targetdir.$this->_name;
 		if($this->checkConstraints() && move_uploaded_file($this->_file['tmp_name'],$this->_targetfile)){
-			echo 'Upload Passed';
+			//echo 'Subido Correctamente';
 			return true;	
 		}
-		echo 'Error al guardar';
+		//echo 'Error al subir';
 		return false;
 	}
 

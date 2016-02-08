@@ -3,7 +3,7 @@
 class URL {
 
     public function to($normalpath) {
-        return Config::path('base') . '/' . $normalpath;
+        return Path::to('base') . '/' . $normalpath;
     }
 
 }

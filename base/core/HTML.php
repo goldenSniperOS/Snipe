@@ -1,9 +1,8 @@
 <?php
 
 class HTML {
-
     public function image($normalpath, $attrib = []) {
-        $stringFinal = "<img src='" . Config::path('public') . '/' . $normalpath . "'";
+        $stringFinal = "<img src='" . URL::to('public') . '/' . $normalpath . "'";
         foreach ($attrib as $key => $value) {
             $stringFinal .= " " . $key . "='" . $value . "'";
         }
@@ -11,11 +10,10 @@ class HTML {
     }
 
     public function style($normalpath) {
-        echo "<link rel='stylesheet' type='text/css' href='" . Config::path('public') . '/' . $normalpath . "'>";
+        return "<link rel='stylesheet' type='text/css' href='" . URL::to('public') . '/' . $normalpath . "'>";
     }
 
     public function script($normalpath) {
-        return "<script type='text/javascript' src='" . Config::path('public') . '/' . $normalpath . "'></script>";
+        return "<script type='text/javascript' src='" . URL::to('public') . '/' . $normalpath . "'></script>";
     }
-
 }

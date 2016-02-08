@@ -10,7 +10,10 @@ class Cookie {
         return $_COOKIE[$name];
     }
 
-    public static function put($name, $value, $expiry) {
+    public static function put($name, $value, $expiry = null) {
+        if(is_null($expiry)){
+            $expiry = Config::get('cookies/default_cookie_expiry');
+        }
         if (setcookie($name, $value, time() + $expiry, '/')) {
             return true;
         }
