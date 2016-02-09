@@ -38,3 +38,5 @@ date_default_timezone_set(Config::get('place'));
 
 //Inicializar el Lenguaje
 Lang::init(Config::get('default_lang'));
+
+require_once Path::to('app').DIRECTORY_SEPARATOR.'routes.php';
