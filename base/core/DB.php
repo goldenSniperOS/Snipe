@@ -152,8 +152,7 @@ class DB {
     }
 
     public function select() {
-        if (func_num_args() > 0)
-            ; {
+        if (func_num_args() > 0){
             $args = func_get_args();
             $this->sql['action'] = 'SELECT';
             foreach ($args as $index => $arg) {
@@ -168,8 +167,7 @@ class DB {
     }
 
     public function distinct() {
-        if (func_num_args() > 0)
-            ; {
+        if (func_num_args() > 0){
             $args = func_get_args();
             $this->sql['action'] = 'SELECT DISTINCT';
             foreach ($args as $index => $arg) {
