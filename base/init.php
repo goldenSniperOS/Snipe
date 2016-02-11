@@ -29,7 +29,7 @@ spl_autoload_register(function($class) {
     }
     //Autocarga de Modelos
     if (file_exists('app/models/' . $class . '.php')) {
-        require_once 'models/' . $class . '.php';
+        require_once Path::to('app').DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR. $class . '.php';
     }
 });
 
