@@ -9,7 +9,7 @@
   | modulo en classes dentro de la carpeta app, automaticamente todo se incluira. No olvides colocarlo en
   | app/config/packages.php
  */
-$packages = require 'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'packages.php';
+$packages = require dirname(__DIR__).DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'packages.php';
 
 if(isset($packages['modules']) && count($packages['modules']) > 0){
   foreach ($packages['modules'] as $modulo) {
@@ -28,7 +28,7 @@ spl_autoload_register(function($class) {
         require_once 'core/' . $class . '.php';
     }
     //Autocarga de Modelos
-    if (file_exists('app/models/' . $class . '.php')) {
+    if (file_exists(Path::to('app').DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR . $class . '.php')) {
         require_once Path::to('app').DIRECTORY_SEPARATOR.'models'.DIRECTORY_SEPARATOR. $class . '.php';
     }
 });

@@ -235,7 +235,7 @@ class DB {
     public function first() {
         $this->sql['limit'] = "LIMIT 1";
         $query = implode(" ", $this->sql);
-        $this->query($query);
+        $this->query($query,$this->_fields);
         if ($this->count() > 0) {
             return $this->results()[0];
         }
@@ -362,5 +362,4 @@ class DB {
     public function error() {
         return $this->_error;
     }
-
 }

@@ -54,7 +54,7 @@ class Eloquent {
         return null;
     }
 
-    public function where() {
+    public static function where() {
         if (func_num_args() > 0){
             if(is_callable(func_get_arg(0))){
                 $_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->where(func_get_arg(0));
@@ -71,7 +71,7 @@ class Eloquent {
                 //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
                 $_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->where($field, $operator, $value);
             }
-            return $this;
+            return $_instanceDB;
         }
         return false;
     }
@@ -104,13 +104,16 @@ class Eloquent {
     //Crea un codigo con un prefijo otorgado en la clase mas un numero de N cifras
     public static function code($numeroFinal) {
         $ultima = DB::getInstance()->select(static::$primaryKey)->table(static::$table)->orderBy(static::$primaryKey, 'desc')->first();
-        $string = $ultima->{static::$primaryKey};
         $numero = "0";
-        for ($i = 0; $i < strlen($string); $i++) {
-            if ($string[$i] != '0' && is_numeric($string[$i])) {
-                $numero = substr($string, $i, strlen($string) - 1);
-                break;
-            }
+        if(!is_null($ultima)){
+            $string = $ultima->{static::$primaryKey};
+            $numero = "0";
+            for ($i = 0; $i < strlen($string); $i++) {
+                if ($string[$i] != '0' && is_numeric($string[$i])) {
+                    $numero = substr($string, $i, strlen($string) - 1);
+                    break;
+                }            
+            }      
         }
         return static::$prefix . str_pad(((int) $numero) + 1, $numeroFinal, "0", STR_PAD_LEFT);
     }
