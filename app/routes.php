@@ -2,12 +2,14 @@
 
 //Example of routes
 
-Route::get('/',function(){
-	echo 'Snipe - PHP';
-});
+
 
 Route::get('function',function(){
 	echo '1+1='.(1+1);
+});
+
+Route::get('/',function(){
+	echo 'Snipe - PHP';
 });
 
 Route::get('home/index/{id}/{var}',function($id,$var = null){

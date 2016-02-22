@@ -21,6 +21,17 @@ return array(
       |
      */
     'database_errors' => true,
+     /*
+      |--------------------------------------------------------------------------
+      | Activador de Errores en PHP
+      |--------------------------------------------------------------------------
+      |
+      | Algunas configuraciones iniciales del php.ini hacen que cualquier error de
+      | PHP se vea como un error 500 en un servidor, impidiendo ver los errores del
+      | código. Si este tiene el valor true, mostrará los errores de php.
+      |
+     */
+    'debug' => true,
     /*
       |--------------------------------------------------------------------------
       | Zona Horaria en la Aplicación

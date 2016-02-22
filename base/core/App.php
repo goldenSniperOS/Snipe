@@ -15,9 +15,9 @@ class App{
         $url = $this->parseURL();
         
         //Controller Analyse
-        $controllerRoutes = array_filter(self::$routes,function($route){
+        $controllerRoutes = array_values(array_filter(self::$routes,function($route){
             return $route['type'] == 'controller';
-        });
+        }));
 
         if(count($controllerRoutes) != 0){
             if($ruta = self::foundRoute([$url[0]],$controllerRoutes)){
@@ -60,9 +60,9 @@ class App{
         }
 
         //Before Get and Post Data Simple URL's
-        $searchArray = array_filter(self::$routes,function($route){
+        $searchArray = array_values(array_filter(self::$routes,function($route){
             return $route['type'] == strtolower($_SERVER['REQUEST_METHOD']);
-        });
+        }));
 
         
 
@@ -95,9 +95,9 @@ class App{
             }
         }else{
             //Data for Home
-            $homeExists = array_filter(self::$routes,function($route){
+            $homeExists = array_values(array_filter(self::$routes,function($route){
                 return $route['literal'] == '/';
-            });
+            }));
             if(count($homeExists) != 0){
                 if(is_callable($homeExists[0]['function'])){
                     call_user_func($homeExists[0]['function']);
