@@ -1,7 +1,7 @@
 <?php
 
 class HTML {
-    public function image($normalpath, $attrib = []) {
+    public static function image($normalpath, $attrib = []) {
         $stringFinal = "<img src='" . URL::to('public') . '/' . $normalpath . "'";
         foreach ($attrib as $key => $value) {
             $stringFinal .= " " . $key . "='" . $value . "'";
@@ -9,11 +9,11 @@ class HTML {
         return $stringFinal . ">";
     }
 
-    public function style($normalpath) {
+    public static function style($normalpath) {
         return "<link rel='stylesheet' type='text/css' href='" . URL::to('public') . '/' . $normalpath . "'>";
     }
 
-    public function script($normalpath) {
+    public static function script($normalpath) {
         return "<script type='text/javascript' src='" . URL::to('public') . '/' . $normalpath . "'></script>";
     }
 }

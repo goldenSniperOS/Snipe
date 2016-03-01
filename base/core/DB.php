@@ -323,8 +323,14 @@ class DB {
             $this->sql['action'] = "UPDATE";
             $this->sql['table'] = substr($this->sql['table'], 5);
             $query = implode(" ", $this->sql);
-            //return $this;
-            return $this->query($query, $fields);
+
+            foreach (array_reverse($fields) as $value) {
+                array_unshift($this->_fields,$value);
+            }
+            
+            //return $query;
+            return $this->query($query, $this->_fields);
+            //return [$this->_fields,$query];
         } catch (PDOException $e) {
             die($e->getMessage());
         }

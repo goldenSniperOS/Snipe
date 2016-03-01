@@ -2,7 +2,7 @@
 
 class URL {
 
-    public function to($normalpath) {
+    public static function to($normalpath) {
         return Path::to('base') . '/' . $normalpath;
     }
 
