@@ -24,7 +24,7 @@ return array(
       | carpeta public para su necesidad
       |
      */
-    'public' => dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR. 'public' . DIRECTORY_SEPARATOR,
+    'public' => dirname(__DIR__). DIRECTORY_SEPARATOR. 'public',
     /*
       |--------------------------------------------------------------------------
       | Base Path

@@ -178,7 +178,7 @@ class App{
 
     private function parseURL() {
         if (isset($_GET['url'])) {
-            $url = explode('/', filter_var(rtrim($_GET['url'], '/'), FILTER_SANITIZE_URL));
+            $url = explode('/', filter_var(rtrim(str_replace(" ", "%20", $_GET['url']), '/'), FILTER_SANITIZE_URL));
             unset($_GET['url']);
             return $url;
         }
