@@ -2,7 +2,7 @@
 /**
 * Clase para setear algunas Cabeceras de Contenido header
 */
-class ClassName extends AnotherClass
+class Header
 {
 	public static function allowAccess(){
 		header('Access-Control-Allow-Origin: *'); 

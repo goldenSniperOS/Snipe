@@ -1,7 +1,7 @@
 <?php
 /**
 * Clase para crear modelos ORM
-*   
+*
 *   Ejemplo para obtener el id:
 *   $salt = Hash::salt(32);
 *   $id = UsersModel::create([
@@ -27,11 +27,17 @@ class Eloquent {
     }
 
     public static function create($fields = array()) {
+        $columns = self::getNumberFields();
+        if(!Tools::arrayAssoc($fields) && count($columns) != $fields && self::haveAutoIncrement()){
+          $next = self::getNextId();
+          array_unshift($fields,$next);
+        }
+
         $id = DB::getInstance()->table(static::$table)->insert($fields);
-        if (!$id) {
-            throw new Exception('Hubo un Problema Registrando ' . get_called_class());
+        if (is_null($id)) {
+            throw new Exception('Hubo un Problema Registrando ' . get_called_class(). ' id:'.$id);
         }else{
-            return $id; 
+            return $id;
         }
     }
 
@@ -67,7 +73,7 @@ class Eloquent {
                     $field = func_get_arg(0);
                     $operator = func_get_arg(1);
                     $value = func_get_arg(2);
-                }    
+                }
                 //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
                 $_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->where($field, $operator, $value);
             }
@@ -79,9 +85,8 @@ class Eloquent {
     public static function select() {
         if (func_num_args() > 0){
             $args = func_get_args();
-            var_dump($args);
             $_instanceDB = DB::getInstance()->table(static::$table)->tableLock();
-            $_instanceDB = call_user_method('select', $_instanceDB,$args);
+            $_instanceDB = call_user_func_array([$_instanceDB, "select"], $args);
             return $_instanceDB;
         }
     }
@@ -102,20 +107,107 @@ class Eloquent {
     }
 
     //Crea un codigo con un prefijo otorgado en la clase mas un numero de N cifras
-    public static function code($numeroFinal) {
-        $ultima = DB::getInstance()->select(static::$primaryKey)->table(static::$table)->orderBy(static::$primaryKey, 'desc')->first();
+    public static function code($numeroFinal = 7) {
+      if(self::haveAutoIncrement()){
+        return self::getNextId();
+      }else{
+        $ultima = self::getLastInsertedKey();
         $numero = "0";
         if(!is_null($ultima)){
-            $string = $ultima->{static::$primaryKey};
-            $numero = "0";
+            $string = $ultima;
             for ($i = 0; $i < strlen($string); $i++) {
                 if ($string[$i] != '0' && is_numeric($string[$i])) {
                     $numero = substr($string, $i, strlen($string) - 1);
                     break;
-                }            
-            }      
+                }
+            }
         }
         return static::$prefix . str_pad(((int) $numero) + 1, $numeroFinal, "0", STR_PAD_LEFT);
+      }
+    }
+
+    private static function haveAutoIncrement(){
+      $proof = DB::getInstance("INFORMATION_SCHEMA")
+      ->select("COLUMN_NAME","COLUMN_TYPE","COLUMN_KEY","EXTRA")
+      ->table("COLUMNS")
+      ->where("TABLE_SCHEMA",Config::get('mysql/database'))
+      ->where("TABLE_NAME",static::$table)
+      ->where("COLUMN_NAME",static::$primaryKey)
+      ->where("DATA_TYPE","int")
+      ->whereNull("COLUMN_DEFAULT")
+      ->where("IS_NULLABLE","NO")
+      ->where("EXTRA",'LIKE',"%auto_increment%")
+      ->first();
+      if(empty($proof)){
+        return false;
+      }
+      return true;
+    }
+
+    public static function getFields(){
+      $fields = DB::getInstance("INFORMATION_SCHEMA")
+      ->select("COLUMN_NAME","COLUMN_TYPE","COLUMN_KEY","EXTRA")
+      ->table("COLUMNS")
+      ->where("TABLE_SCHEMA",Config::get('mysql/database'))
+      ->where("TABLE_NAME",static::$table)
+      ->get();
+
+      if(empty($fields)){
+        throw new Exception('La tabla '.static::$table.' no esta definida en '.Config::get('mysql/database'));
+      }else{
+        return $fields;
+      }
+    }
+
+    public static function getNumberFields(){
+      $fields = DB::getInstance("INFORMATION_SCHEMA")
+      ->select("COUNT(COLUMN_NAME) AS counter")
+      ->table("COLUMNS")
+      ->where("TABLE_SCHEMA",Config::get('mysql/database'))
+      ->where("TABLE_NAME",static::$table)
+      ->first();
+
+      if(empty($fields)){
+        throw new Exception('La tabla '.static::$table.' no esta definida en INFORMATION_SCHEMA');
+      }else{
+        return $fields->counter;
+      }
+    }
+
+    public static function orderBy($field, $direction = null) {
+        $_instanceDB = DB::getInstance()->table(static::$table)->orderBy($field,$direction);
+        return $instanceDB;
+    }
+
+
+    private static function getLastInsertedKey(){
+      $class = get_called_class();
+        $ultima = DB::getInstance()
+        ->select($class::$primaryKey)
+        ->table($class::$table)
+        ->orderBy($class::$primaryKey, 'desc')
+        ->first();
+        if(is_null($ultima)){
+            //No hay ninguna collumna
+            return 0;
+        }else{
+
+          return $ultima->{static::$primaryKey};
+        }
+    }
+
+    private static function getNextId(){
+      $class = get_called_class();
+      if($class::haveAutoIncrement()){
+        $ultima = DB::getInstance("INFORMATION_SCHEMA")
+        ->select("AUTO_INCREMENT")
+        ->table("TABLES")
+        ->where("TABLE_SCHEMA",Config::get('mysql/database'))
+        ->where("TABLE_NAME",static::$table)
+        ->first();
+        return $ultima->AUTO_INCREMENT;
+      }
+      return false;
     }
 
     public static function update($fields = array(), $id = null, $key = null) {

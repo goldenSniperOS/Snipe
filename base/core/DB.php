@@ -4,16 +4,20 @@ class DB {
 
     private static $_instance = null;
     private $_pdo,
+            $_database = null,
+            $_host = null,
             $_query,
             $_error = false,
             $_results = null,
             $_count = -1;
 
-    private function __construct() {
+    private function __construct($database, $host) {
         try {
+            $this->_database = $database;
+            $this->_host = $host;
             $this->_pdo = new PDO(
-                    'mysql:host=' . Config::get('mysql/host') .
-                    ';dbname=' . Config::get('mysql/database'), Config::get('mysql/username'), Config::get('mysql/password'), array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES  \'UTF8\''));
+                    'mysql:host=' . $host .
+                    ';dbname=' . $database, Config::get('mysql/username'), Config::get('mysql/password'), array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES  \'UTF8\''));
             if (Config::get('database_errors')) {
                 $this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             }
@@ -42,25 +46,36 @@ class DB {
         self::$_instance->sql['order'] = '';
         self::$_instance->sql['limit'] = '';
         self::$_instance->_tableLock = false;
-        self::$_instance->_fields = [];
+
+        self::$_instance->_fields['fields'] = [];
+        self::$_instance->_fields['where'] = [];
+        self::$_instance->_fields['limit'] = [];
     }
 
-    public static function getInstance() {
-        if (!isset(self::$_instance)) {
-            self::$_instance = new DB();
+    public static function getInstance($database = null,$host = null) {
+        if(is_null($database)){
+            $database = Config::get('mysql/database');
+        }
+        if(is_null($host)){
+          $host = Config::get('mysql/host');
+        }
+
+        if (!isset(self::$_instance) || ($database != self::$_instance->_database || $host != self::$_instance->_host)) {
+          self::$_instance = null;
+          self::$_instance = new DB($database,$host);
         }
         self::initQuery();
         return self::$_instance;
     }
 
-    private function addParam($param){
+    private function addParam($param,$querySection){
         if(is_array($param)){
             foreach ($param as $val) {
-                $this->_fields[] = $val;
+                $this->_fields[$querySection][] = $val;
             }
         }else{
-            $this->_fields[] = $param;    
-        }        
+            $this->_fields[$querySection][] = $param;
+        }
     }
 
     public function query($sql, $params = array()) {
@@ -99,7 +114,7 @@ class DB {
                 $wheres = new Where();
                 call_user_func_array(func_get_arg(0), [$wheres]);
                 $this->sql['where'] .= ' AND '. $wheres->getQuery();
-                $this->addParam($wheres->getParams());
+                $this->addParam($wheres->getParams(),"where");
             }else{
                 if (func_num_args() == 2) {
                     $field = func_get_arg(0);
@@ -109,17 +124,67 @@ class DB {
                     $field = func_get_arg(0);
                     $operator = func_get_arg(1);
                     $value = func_get_arg(2);
-                }    
-                //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
-                $this->addParam($value);
+                }
+
+                if(!strpos($field,'.') === false){
+                    $field = explode('.',$field);
+                    for ($i=0; $i < count($field); $i++) {
+                        $field[$i] = '`'.$field[$i].'`';
+                    }
+                    $field = implode('.',$field);
+                }else{
+                    $field = '`'.$field.'`';
+                }
+
+                $this->addParam($value,"where");
                 if ($this->sql['where'] == '') {
-                    $this->sql['where'] = 'WHERE `' . $field . '` ' . $operator . ' ' . '?';
+                    $this->sql['where'] = 'WHERE '. $field .' ' . $operator . ' ' . '?';
                 } else {
-                    $this->sql['where'] .= ' AND `' . $field . '` ' . $operator . ' ' . '?';
+                    $this->sql['where'] .= ' AND ' . $field . ' ' . $operator . ' ' . '?';
                 }
             }
             return $this;
         }
+    }
+
+    public function whereNull($field){
+      if(!strpos($field,'.') === false){
+          $field = explode('.',$field);
+          for ($i=0; $i < count($field); $i++) {
+              $field[$i] = '`'.$field[$i].'`';
+          }
+          $field = implode('.',$field);
+      }else{
+          $field = '`'.$field.'`';
+      }
+
+      if ($this->sql['where'] == '') {
+          $this->sql['where'] = 'WHERE '. $field .' IS NULL';
+      } else {
+          $this->sql['where'] .= ' AND ' . $field . ' IS NULL';
+      }
+
+      return $this;
+    }
+
+    public function orWhereNull($field){
+      if(!strpos($field,'.') === false){
+          $field = explode('.',$field);
+          for ($i=0; $i < count($field); $i++) {
+              $field[$i] = '`'.$field[$i].'`';
+          }
+          $field = implode('.',$field);
+      }else{
+          $field = '`'.$field.'`';
+      }
+
+      if ($this->sql['where'] == '') {
+          $this->sql['where'] = 'WHERE '. $field .' IS NULL ';
+      } else {
+          $this->sql['where'] .= ' OR ' . $field . ' IS NULL ';
+      }
+
+      return $this;
     }
 
     public function orWhere() {
@@ -128,7 +193,7 @@ class DB {
                 $wheres = new Where();
                 call_user_func_array(func_get_arg(0), [$wheres]);
                 $this->sql['where'] .= ' OR '. $wheres->getQuery();
-                $this->addParam($wheres->getParams());
+                $this->addParam($wheres->getParams(),"where");
             }else{
                 if (func_num_args() == 2) {
                     $field = func_get_arg(0);
@@ -138,13 +203,24 @@ class DB {
                     $field = func_get_arg(0);
                     $operator = func_get_arg(1);
                     $value = func_get_arg(2);
-                }    
+                }
                 //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
-                $this->addParam($value);
+
+                if(!strpos($field,'.') === false){
+                    $field = explode('.',$field);
+                    for ($i=0; $i < count($field); $i++) {
+                        $field[$i] = '`'.$field[$i].'`';
+                    }
+                    $field = implode('.',$field);
+                }else{
+                    $field = '`'.$field.'`';
+                }
+
+                $this->addParam($value,"where");
                 if ($this->sql['where'] == '') {
-                    $this->sql['where'] = 'WHERE `' . $field . '` ' . $operator . ' ' . '?';
+                    $this->sql['where'] = 'WHERE ' . $field . ' ' . $operator . ' ' . '?';
                 } else {
-                    $this->sql['where'] .= ' OR `' . $field . '` ' . $operator . ' ' . '?';
+                    $this->sql['where'] .= ' OR ' . $field . ' ' . $operator . ' ' . '?';
                 }
             }
             return $this;
@@ -156,6 +232,17 @@ class DB {
             $args = func_get_args();
             $this->sql['action'] = 'SELECT';
             foreach ($args as $index => $arg) {
+
+                if(!strpos($arg,'.') === false){
+                    $arg = explode('.',$arg);
+                    for ($i=0; $i < count($arg); $i++) {
+                        $arg[$i] = '`'.$arg[$i].'`';
+                    }
+                    $arg = implode('.',$arg);
+                }else{
+                    $arg = '`'.$arg.'`';
+                }
+
                 if ($index == count($args) - 1) {
                     $this->sql['action'].= ' ' . $arg;
                 } else {
@@ -171,6 +258,17 @@ class DB {
             $args = func_get_args();
             $this->sql['action'] = 'SELECT DISTINCT';
             foreach ($args as $index => $arg) {
+
+                if(!strpos($arg,'.') === false){
+                    $arg = explode('.',$arg);
+                    for ($i=0; $i < count($arg); $i++) {
+                        $arg[$i] = '`'.$arg[$i].'`';
+                    }
+                    $arg = implode('.',$arg);
+                }else{
+                    $arg = '`'.$arg.'`';
+                }
+
                 if ($index == count($args) - 1) {
                     $this->sql['action'].= ' ' . $arg;
                 } else {
@@ -182,16 +280,75 @@ class DB {
     }
 
     public function join($table, $primarykey, $operator, $foreignkey) {
-        $this->sql['join'] .= ' INNER JOIN ' . $table . ' ON `' . $primarykey .'` '. $operator .' `'. $foreignkey.'`';
+
+        if(!strpos($primarykey,'.') === false){
+            $primarykey = explode('.',$primarykey);
+            for ($i=0; $i < count($primarykey); $i++) {
+                $primarykey[$i] = '`'.$primarykey[$i].'`';
+            }
+            $primarykey = implode('.',$primarykey);
+        }else{
+            $primarykey = '`'.$primarykey.'`';
+        }
+
+        if(!strpos($foreignkey,'.') === false){
+            $foreignkey = explode('.',$foreignkey);
+            for ($i=0; $i < count($foreignkey); $i++) {
+                $foreignkey[$i] = '`'.$foreignkey[$i].'`';
+            }
+            $foreignkey = implode('.',$foreignkey);
+        }else{
+            $foreignkey = '`'.$foreignkey.'`';
+        }
+
+        $this->sql['join'] .= ' INNER JOIN ' . $table . ' ON ' . $primarykey .' '. $operator .' '. $foreignkey;
         return $this;
     }
 
     public function leftJoin($table, $primarykey, $operator, $foreignkey) {
-        $this->sql['join'] .= ' LEFT JOIN ' . $table . ' ON `' . $primarykey .'` '. $operator .' `'. $foreignkey.'`';
+
+        if(!strpos($primarykey,'.') === false){
+            $primarykey = explode('.',$primarykey);
+            for ($i=0; $i < count($primarykey); $i++) {
+                $primarykey[$i] = '`'.$primarykey[$i].'`';
+            }
+            $primarykey = implode('.',$primarykey);
+        }else{
+            $primarykey = '`'.$primarykey.'`';
+        }
+
+        if(!strpos($foreignkey,'.') === false){
+            $foreignkey = explode('.',$foreignkey);
+            for ($i=0; $i < count($foreignkey); $i++) {
+                $foreignkey[$i] = '`'.$foreignkey[$i].'`';
+            }
+            $foreignkey = implode('.',$foreignkey);
+        }else{
+            $foreignkey = '`'.$foreignkey.'`';
+        }
+
+        $this->sql['join'] .= ' LEFT JOIN ' . $table . ' ON ' . $primarykey .' '. $operator .' '. $foreignkey;
         return $this;
     }
 
     public function rightJoin($table, $primarykey, $operator, $foreignkey) {
+
+        if(!strpos($primarykey,'.') === false){
+            $primarykey = explode('.',$primarykey);
+            for ($i=0; $i < count($primarykey); $i++) {
+                $primarykey[$i] = '`'.$primarykey[$i].'`';
+            }
+            $primarykey = implode('.',$primarykey);
+        }
+
+        if(!strpos($foreignkey,'.') === false){
+            $foreignkey = explode('.',$foreignkey);
+            for ($i=0; $i < count($foreignkey); $i++) {
+                $foreignkey[$i] = '`'.$foreignkey[$i].'`';
+            }
+            $foreignkey = implode('.',$foreignkey);
+        }
+
         $this->sql['join'] .= ' RIGHT JOIN ' . $table . ' ON `' . $primarykey .'` '. $operator .' `'. $foreignkey.'`';
         return $this;
     }
@@ -199,18 +356,39 @@ class DB {
     public function table($table, $alias = null) {
         if (!$this->_tableLock) {
             $alias = ($alias) ? " AS " . $alias : "";
-            $this->sql['table'] = 'FROM ' . $table . $alias;
+            $this->sql['table'] = 'FROM `' . $table .'`'. $alias;
             $this->tableLock();
         }
         return $this;
     }
 
     public function groupBy($field) {
-        $this->sql['group'] = 'GROUP BY' . $field;
+
+        if(!strpos($field,'.') === false){
+            $field = explode('.',$field);
+            for ($i=0; $i < count($field); $i++) {
+                $field[$i] = '`'.$field[$i].'`';
+            }
+            $field = implode('.',$field);
+        }else{
+            $field = '`'.$field.'`';
+        }
+
+        $this->sql['group'] = 'GROUP BY ' . $field;
         return $this;
     }
 
     public function orderBy($field, $direction = null) {
+        if(!strpos($field,'.') === false){
+            $field = explode('.',$field);
+            for ($i=0; $i < count($field); $i++) {
+                $field[$i] = '`'.$field[$i].'`';
+            }
+            $field = implode('.',$field);
+        }else{
+            $field = '`'.$field.'`';
+        }
+
         if ($direction) {
             $this->sql['order'] = 'ORDER BY ' . $field . ' ' . strtoupper($direction);
         } else {
@@ -220,21 +398,25 @@ class DB {
     }
 
     public function limit($param1, $param2 = null) {
-        $this->sql['limit'] = 'LIMIT ' . $param1;
-        if ($param2) {
-            $this->sql['limit']+=',' . $param2;
+        $this->sql['limit'] = 'LIMIT ?';
+        $this->addParam($param1,'limit');
+        if (!is_null($param2)) {
+            $this->addParam($param2,'limit');
+            $this->sql['limit'] .= ',?';
         }
         return $this;
     }
 
     public function get() {
         $query = implode(" ", $this->sql);
+        $this->_fields = array_merge($this->_fields['fields'],$this->_fields['where'],$this->_fields['limit']);
         return $this->query($query,$this->_fields)->results();
     }
 
     public function first() {
         $this->sql['limit'] = "LIMIT 1";
         $query = implode(" ", $this->sql);
+        $this->_fields = array_merge($this->_fields['fields'],$this->_fields['where'],$this->_fields['limit']);
         $this->query($query,$this->_fields);
         if ($this->count() > 0) {
             return $this->results()[0];
@@ -256,7 +438,7 @@ class DB {
                     $x++;
                 }
                 $this->sql['action'] = "INSERT INTO";
-                
+
                 if ($fields) {
                     if (Tools::arrayAssoc($fields)) {
                         $this->sql['table'] = substr($this->sql['table'], 5) . "(`" . implode('`, `', $keys) . "`)";
@@ -264,7 +446,7 @@ class DB {
                         $this->sql['table'] = substr($this->sql['table'], 5);
                     }
                 }
-                
+
                 $this->sql['fields'] = "VALUES({$values})";
                 //Debug::varDump($this->sql);
                 $query = implode(" ", $this->sql);
@@ -324,10 +506,6 @@ class DB {
             $this->sql['table'] = substr($this->sql['table'], 5);
             $query = implode(" ", $this->sql);
 
-            foreach (array_reverse($fields) as $value) {
-                array_unshift($this->_fields,$value);
-            }
-            
             //return $query;
             return $this->query($query, $this->_fields);
             //return [$this->_fields,$query];
@@ -350,13 +528,13 @@ class DB {
     }
 
     public function count($field = null) {
-        if($this->_count == -1 && $this->select['table'] == 'FROM table'){
-            $this->select['join'] = 'SELECT COUNT('.(is_null($field))?'*':$field.') as COUNT';
+        if($this->_count == -1 && $this->sql['table'] != 'FROM table'){
+            $field = (is_null($field))?'*':$field;
+            $this->sql['action'] = 'SELECT COUNT('.$field.') as COUNT';
             $query = implode(" ", $this->sql);
-            $this->query($query);
-            if ($this->count() > 0) {
-                $this->_count = $this->results()[0];
-            }
+            $this->_fields = array_merge($this->_fields['fields'],$this->_fields['where'],$this->_fields['limit']);
+            $this->query($query,$this->_fields);
+            $this->_count = $this->results()[0]->COUNT;
         }
         return $this->_count;
     }
