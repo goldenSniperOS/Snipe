@@ -154,13 +154,13 @@ class App{
         foreach ($searchArray as $route) {
             if(self::sameRoute($route,$url)){
                 //Modo estricto de Rutas
-                if(false){
+                /*if(false){
                     if(count($url) == (count($route['params'])+count($route['route']))){
                         return $route;
                     }else{
                         return false;
                     }
-                }
+                }*/
                 return $route;
             }
         }

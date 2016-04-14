@@ -2,31 +2,30 @@
 
 //Example of routes
 
+//Ruta inicial del proyecto
+Route::get('/',function(){
+	$prueba = DB::getInstance()->where(function($query){
 
-
-Route::get('function',function(){
-	echo '1+1='.(1+1);
+	})->where('var','pene');
+	Debug::varDump($prueba);
 });
 
-Route::get('/',function(){
-	//$data = DB::getInstance()->table('limpia')->where('tabla.campo','valor')->limit(5);
-	//Debug::varDump($data);
+Route::get('function',function(){
+	//Se ejecuta con http//localhost/project/function
 
-	Debug::varDump(Candidato::select('can_Codigo',"can_Foto")->where('can_Codigo',1)->get());
+});
+
+Route::post('user/register',function(){
+	echo 'Esta es una ruta POST';
 });
 
 Route::get('home/index/{id}/{var}',function($id,$var = null){
-	echo 'Hola Mundo: '.$id.'-'.$var;
+	//Si deseas que un parametro sea obligatorio solo debes poner null a la variable
+	echo 'Ruta con Parametros: '.$id.'-'.$var;
 });
 
-Route::get('home/index/tema/cosa/{id}/{var}/{hola}/{mama}',function($id,$var,$hola,$var){
-	echo 'Hola Mundo: '.$id.'-'.$var;
-});
-
+//Asignado a controlador y función
 Route::get('test','Prueba@index');
 
+//Controlador RestFul asignado a una ruta
 Route::controller('restfules','Restful');
-
-Route::post('home/index/register',function(){
-	echo 'esta es una ruta post';
-});

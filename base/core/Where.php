@@ -10,8 +10,8 @@ class Where
                 $this->_fields[] = $val;
             }
         }else{
-            $this->_fields[] = $param;    
-        }        
+            $this->_fields[] = $param;
+        }
     }
 
 	public function where() {
@@ -24,14 +24,25 @@ class Where
                 $field = func_get_arg(0);
                 $operator = func_get_arg(1);
                 $value = func_get_arg(2);
-            }    
-            //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
-            $this->addParam($value);
-            if ($this->wherewobjects == '') {
-                $this->wherewobjects = '`'.$field . '` ' . $operator . ' ' . '?';
-            } else {
-                $this->wherewobjects .= ' AND `' . $field . '` ' . $operator . ' ' . '?';
             }
+            //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
+
+						if(!strpos($field,'.') === false){
+								$field = explode('.',$field);
+								for ($i=0; $i < count($field); $i++) {
+										$field[$i] = '`'.$field[$i].'`';
+								}
+								$field = implode('.',$field);
+						}else{
+								$field = '`'.$field.'`';
+						}
+
+						$this->addParam($value,"where");
+						if ($this->wherewobjects['where'] == '') {
+								$this->wherewobjects['where'] = 'WHERE '. $field .' ' . $operator . ' ' . '?';
+						} else {
+								$this->wherewobjects['where'] .= ' AND ' . $field . ' ' . $operator . ' ' . '?';
+						}
             return $this;
         }
     }
