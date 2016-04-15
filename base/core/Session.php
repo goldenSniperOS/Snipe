@@ -33,7 +33,4 @@ class Session {
             self::put($name, $string);
         }
     }
-
 }
-
-?>

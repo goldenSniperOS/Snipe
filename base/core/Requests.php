@@ -11,7 +11,7 @@
  * 		echo $data;
  * });
  *
- *
+ * Esta clase presenta algunos errores de respuesta
  * Make asynchronous requests to different resources as fast as possible and process the results as they are ready.
  */
 class Requests

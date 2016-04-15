@@ -9,7 +9,7 @@ return array(
       |
       | Esta será la ruta que tendra, el acceso a toda tu aplicacion, controladores,
       | vistas, modelos, layouts y muchas cosas mas, con este, se colocaran varios paths
-      | para su uso en todo el framework, es recomendable ser cuidadoso al momento de 
+      | para su uso en todo el framework, es recomendable ser cuidadoso al momento de
       | cambiarlo
       |
      */
@@ -17,7 +17,7 @@ return array(
     'app' => dirname(__DIR__).DIRECTORY_SEPARATOR.'app',
      /*
       |--------------------------------------------------------------------------
-      | Public Path 
+      | Public Path
       |--------------------------------------------------------------------------
       |
       | Aqui se coloca la direccion de la
@@ -35,5 +35,16 @@ return array(
       | is necessary you will do so here, just proceed with some caution.
       |
      */
-    'base' => ((isset($_SERVER['HTTPS']))?'https':'http').'://' . $_SERVER['HTTP_HOST'] . str_replace('/index.php', '', $_SERVER['PHP_SELF'])
+    'base' => dirname(__DIR__). DIRECTORY_SEPARATOR. 'base',
+    /*
+      |--------------------------------------------------------------------------
+      | Vendor Composer Folder
+      |--------------------------------------------------------------------------
+      |
+      | Esta ruta se dirige a la carpeta vendor, en caso sea necesario agregar
+      | paquetes de Composer al proyecto 
+      |
+      |
+     */
+    'vendor' => dirname(__DIR__). DIRECTORY_SEPARATOR. 'vendor',
 );

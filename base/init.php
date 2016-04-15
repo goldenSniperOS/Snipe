@@ -5,7 +5,7 @@
   | Inicializador de Clases
   |--------------------------------------------------------------------------
   | Este script se encarga de cargar todos los archivos necesarios para el funcionamiento del framework
-  | Si deseas agregar una funcion en especial puedes agregarla en la clase Tools del Core, o agregar un 
+  | Si deseas agregar una funcion en especial puedes agregarla en la clase Tools del Core, o agregar un
   | modulo en classes dentro de la carpeta app, automaticamente todo se incluira. No olvides colocarlo en
   | app/config/packages.php
  */
@@ -13,7 +13,7 @@ $packages = require dirname(__DIR__).DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARAT
 
 if(isset($packages['modules']) && count($packages['modules']) > 0){
   foreach ($packages['modules'] as $modulo) {
-    $array = glob(__DIR__.DIRECTORY_SEPARATOR."classes".DIRECTORY_SEPARATOR.$modulo.DIRECTORY_SEPARATOR."*.php"); 
+    $array = glob(__DIR__.DIRECTORY_SEPARATOR."classes".DIRECTORY_SEPARATOR.$modulo.DIRECTORY_SEPARATOR."*.php");
     array_multisort(array_map('strlen', $array), $array);
     foreach ($array as $filename)
     {
@@ -46,3 +46,4 @@ date_default_timezone_set(Config::get('place'));
 Lang::init(Config::get('default_lang'));
 
 require_once Path::to('app').DIRECTORY_SEPARATOR.'routes.php';
+require_once Path::to('vendor').DIRECTORY_SEPARATOR.'autoload.php';

@@ -7,7 +7,7 @@ class Hash {
     }
 
     public static function salt($lengt) {
-        return utf8_encode(mcrypt_create_iv($lengt));
+        return utf8_encode(mcrypt_create_iv($lengt,MCRYPT_DEV_URANDOM));
     }
 
     public static function unique() {

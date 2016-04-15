@@ -7,14 +7,14 @@ class Where
     private function addParam($param){
         if(is_array($param)){
             foreach ($param as $val) {
-                $this->_fields[] = $val;
+                $this->fields[] = $val;
             }
         }else{
-            $this->_fields[] = $param;
+            $this->fields[] = $param;
         }
     }
 
-	public function where() {
+		public function where() {
         if (func_num_args() > 0){
             if (func_num_args() == 2) {
                 $field = func_get_arg(0);
@@ -37,11 +37,12 @@ class Where
 								$field = '`'.$field.'`';
 						}
 
-						$this->addParam($value,"where");
-						if ($this->wherewobjects['where'] == '') {
-								$this->wherewobjects['where'] = 'WHERE '. $field .' ' . $operator . ' ' . '?';
+						$this->addParam($value);
+
+						if ($this->wherewobjects == '') {
+								$this->wherewobjects = $field .' ' . $operator . ' ' . '?';
 						} else {
-								$this->wherewobjects['where'] .= ' AND ' . $field . ' ' . $operator . ' ' . '?';
+								$this->wherewobjects .= ' AND ' . $field . ' ' . $operator . ' ' . '?';
 						}
             return $this;
         }
@@ -68,9 +69,21 @@ class Where
             }
 
             //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
+
+						if(!strpos($field,'.') === false){
+								$field = explode('.',$field);
+								for ($i=0; $i < count($field); $i++) {
+										$field[$i] = '`'.$field[$i].'`';
+								}
+								$field = implode('.',$field);
+						}else{
+								$field = '`'.$field.'`';
+						}
+
             $this->addParam($value);
+						
             if ($this->wherewobjects == '') {
-                $this->wherewobjects = '`'.$field . '` ' . $operator . ' ' . '?';
+                $this->wherewobjects = $field . ' ' . $operator . ' ' . '?';
             } else {
                 $this->wherewobjects .= ' OR ' . $field . ' ' . $operator . ' ' . '?';
             }

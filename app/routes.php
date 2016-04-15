@@ -5,7 +5,7 @@
 //Ruta inicial del proyecto
 Route::get('/',function(){
 	$prueba = DB::getInstance()->where(function($query){
-
+		$query->where('a','b');
 	})->where('var','pene');
 	Debug::varDump($prueba);
 });
