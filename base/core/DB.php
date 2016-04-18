@@ -233,7 +233,8 @@ class DB {
             $this->sql['action'] = 'SELECT';
             foreach ($args as $index => $arg) {
 
-                if(!strpos($arg,'.') === false){
+                //Buscar una Solucion
+                /*if(!strpos($arg,'.') === false){
                     $arg = explode('.',$arg);
                     for ($i=0; $i < count($arg); $i++) {
                         $arg[$i] = '`'.$arg[$i].'`';
@@ -241,7 +242,7 @@ class DB {
                     $arg = implode('.',$arg);
                 }else{
                     $arg = '`'.$arg.'`';
-                }
+                }*/
 
                 if ($index == count($args) - 1) {
                     $this->sql['action'].= ' ' . $arg;
