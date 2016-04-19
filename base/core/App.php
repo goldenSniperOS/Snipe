@@ -13,7 +13,7 @@ class App{
 
         //ParseURL
         $url = $this->parseURL();
-        
+
         //Controller Analyse
         $controllerRoutes = array_values(array_filter(self::$routes,function($route){
             return $route['type'] == 'controller';
@@ -40,7 +40,7 @@ class App{
                     die();
                 }else{
                     $params = array_splice($url,2);
-                    $this->method = strtolower($method).ucfirst($this->method);                   
+                    $this->method = strtolower($method).ucfirst($this->method);
                     if($code = $this->callController($ruta['route'],explode('@',$ruta['function'].'@'.$this->method),$params) != 4){
                         switch ($code) {
                             case 1:
@@ -54,7 +54,7 @@ class App{
                                 break;
                         }
                     }
-                    die();                    
+                    die();
                 }
             }
         }
@@ -64,7 +64,7 @@ class App{
             return $route['type'] == strtolower($_SERVER['REQUEST_METHOD']);
         }));
 
-        
+
 
         if (isset($url)) {
             if(count($searchArray) != 0){
@@ -89,9 +89,9 @@ class App{
                         die();
                     }
                 }else{
-                    echo 'Ruta no Encontrada';
-                    die();
-                }    
+                    //echo 'Ruta no Encontrada';
+                    Redirect::to(404);
+                }
             }
         }else{
             //Data for Home
@@ -119,7 +119,6 @@ class App{
                 }
             }else{
                 echo 'Ruta Principal No definida';
-                die();
             }
         }
     }
