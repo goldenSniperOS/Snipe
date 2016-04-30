@@ -1,5 +1,5 @@
 <?php
-
+    
 class DB {
 
     private static $_instance = null;
@@ -507,6 +507,8 @@ class DB {
             $this->sql['table'] = substr($this->sql['table'], 5);
             $query = implode(" ", $this->sql);
 
+            $this->addParam($fields,'fields');
+            $this->_fields = array_merge($this->_fields['fields'],$this->_fields['where'],$this->_fields['limit']);
             //return $query;
             return $this->query($query, $this->_fields);
             //return [$this->_fields,$query];
