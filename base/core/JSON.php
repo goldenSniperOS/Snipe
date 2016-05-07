@@ -1,6 +1,6 @@
 <?php
 
-class Android {
+class JSON {
 
     public static function get($item) {
         $post = json_decode(file_get_contents('php://input'));

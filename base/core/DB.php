@@ -125,7 +125,7 @@ class DB {
                     $operator = func_get_arg(1);
                     $value = func_get_arg(2);
                 }
-
+/*
                 if(!strpos($field,'.') === false){
                     $field = explode('.',$field);
                     for ($i=0; $i < count($field); $i++) {
@@ -134,7 +134,7 @@ class DB {
                     $field = implode('.',$field);
                 }else{
                     $field = '`'.$field.'`';
-                }
+                }*/
 
                 $this->addParam($value,"where");
                 if ($this->sql['where'] == '') {
@@ -206,7 +206,7 @@ class DB {
                 }
                 //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
 
-                if(!strpos($field,'.') === false){
+                /*if(!strpos($field,'.') === false){
                     $field = explode('.',$field);
                     for ($i=0; $i < count($field); $i++) {
                         $field[$i] = '`'.$field[$i].'`';
@@ -215,7 +215,7 @@ class DB {
                 }else{
                     $field = '`'.$field.'`';
                 }
-
+*/
                 $this->addParam($value,"where");
                 if ($this->sql['where'] == '') {
                     $this->sql['where'] = 'WHERE ' . $field . ' ' . $operator . ' ' . '?';
@@ -282,7 +282,7 @@ class DB {
 
     public function join($table, $primarykey, $operator, $foreignkey) {
 
-        if(!strpos($primarykey,'.') === false){
+        /*if(!strpos($primarykey,'.') === false){
             $primarykey = explode('.',$primarykey);
             for ($i=0; $i < count($primarykey); $i++) {
                 $primarykey[$i] = '`'.$primarykey[$i].'`';
@@ -300,7 +300,7 @@ class DB {
             $foreignkey = implode('.',$foreignkey);
         }else{
             $foreignkey = '`'.$foreignkey.'`';
-        }
+        }*/
 
         $this->sql['join'] .= ' INNER JOIN ' . $table . ' ON ' . $primarykey .' '. $operator .' '. $foreignkey;
         return $this;
@@ -308,7 +308,7 @@ class DB {
 
     public function leftJoin($table, $primarykey, $operator, $foreignkey) {
 
-        if(!strpos($primarykey,'.') === false){
+        /*if(!strpos($primarykey,'.') === false){
             $primarykey = explode('.',$primarykey);
             for ($i=0; $i < count($primarykey); $i++) {
                 $primarykey[$i] = '`'.$primarykey[$i].'`';
@@ -326,7 +326,7 @@ class DB {
             $foreignkey = implode('.',$foreignkey);
         }else{
             $foreignkey = '`'.$foreignkey.'`';
-        }
+        }*/
 
         $this->sql['join'] .= ' LEFT JOIN ' . $table . ' ON ' . $primarykey .' '. $operator .' '. $foreignkey;
         return $this;
@@ -334,7 +334,7 @@ class DB {
 
     public function rightJoin($table, $primarykey, $operator, $foreignkey) {
 
-        if(!strpos($primarykey,'.') === false){
+        /*if(!strpos($primarykey,'.') === false){
             $primarykey = explode('.',$primarykey);
             for ($i=0; $i < count($primarykey); $i++) {
                 $primarykey[$i] = '`'.$primarykey[$i].'`';
@@ -348,7 +348,7 @@ class DB {
                 $foreignkey[$i] = '`'.$foreignkey[$i].'`';
             }
             $foreignkey = implode('.',$foreignkey);
-        }
+        }*/
 
         $this->sql['join'] .= ' RIGHT JOIN ' . $table . ' ON `' . $primarykey .'` '. $operator .' `'. $foreignkey.'`';
         return $this;

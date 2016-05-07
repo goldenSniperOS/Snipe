@@ -111,6 +111,7 @@ class File
 		return true;
 	}
 
+	//No Funciona en algunas PC's - Linux
 	public static function folder($targetdir){
 		if (!file_exists($targetdir)) {
             if (!mkdir($targetdir, 0777, true)) {
