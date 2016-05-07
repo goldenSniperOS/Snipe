@@ -2,18 +2,18 @@
 
 //Example of routes
 
-//Ruta inicial del proyecto
+//Ruta Inicial del Proyecto
 Route::get('/',function(){
-	
+	View::render('home/index');
 });
 
 Route::get('function',function(){
-	//Se ejecuta con http//localhost/project/function
-
+	//Puedes definir rutas con nombres diferentes
 });
 
+
 Route::post('user/register',function(){
-	echo 'Esta es una ruta POST';
+	//Puedes definir rutas de tipo POST
 });
 
 Route::get('home/index/{id}/{var}',function($id,$var = null){
@@ -21,7 +21,7 @@ Route::get('home/index/{id}/{var}',function($id,$var = null){
 	echo 'Ruta con Parametros: '.$id.'-'.$var;
 });
 
-//Asignado a controlador y función
+//Ruta asignada a controlador y funcion
 Route::get('test','Prueba@index');
 
 //Controlador RestFul asignado a una ruta

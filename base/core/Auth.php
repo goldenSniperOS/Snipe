@@ -30,8 +30,8 @@ class Auth {
                     }
                 }
             }else{
-                $user = $class::where($username, Config::get('user/userField'))
-                ->where($password,Config::get('user/passwordField'))
+                $user = $class::where(Config::get('user/userField'),$username)
+                ->where(Config::get('user/passwordField'),$password)
                 ->first();
                  if ($user != null) {
                     //Estas Dos Lineas Loguean realmente al Usuario         
@@ -49,6 +49,12 @@ class Auth {
         Session::destroy();
     }
 
+    public function isNotLoggedIn() {
+        if (Session::exists('isLoggedIn')) {
+            return false;
+        }
+        return true;
+    }
 
     public function isLoggedIn() {
         if (Session::exists('isLoggedIn')) {

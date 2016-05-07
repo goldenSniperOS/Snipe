@@ -33,17 +33,24 @@ spl_autoload_register(function($class) {
     }
 });
 
+
+//Seteo de Errores
 if(Config::get('debug')){
   ini_set('display_errors', 1);
   ini_set('display_startup_errors', 1);
   error_reporting(E_ALL);
 }
 
-session_start();
-date_default_timezone_set(Config::get('place'));
-
 //Inicializar el Lenguaje
 Lang::init(Config::get('default_lang'));
 
+//Carga de Archivos
 require_once Path::to('app').DIRECTORY_SEPARATOR.'routes.php';
 require_once Path::to('vendor').DIRECTORY_SEPARATOR.'autoload.php';
+
+//Scripts Generales para tener Datos del Framework en Javascript
+$script =  new ScriptEngine();
+
+//Inicio de Sesion
+session_start();
+date_default_timezone_set(Config::get('place'));
