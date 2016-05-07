@@ -49,7 +49,7 @@
       <button>Restart</button>
     </p>
   </body>
-  <script type="text/javascript" src="public/jquery.min.js"></script>
+  <script type="text/javascript" src="public/jquery/jquery.min.js"></script>
   <script type="text/javascript">
   $(function() {
   // The base speed per character
