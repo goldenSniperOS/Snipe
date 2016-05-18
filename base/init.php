@@ -48,9 +48,6 @@ Lang::init(Config::get('default_lang'));
 require_once Path::to('app').DIRECTORY_SEPARATOR.'routes.php';
 require_once Path::to('vendor').DIRECTORY_SEPARATOR.'autoload.php';
 
-//Scripts Generales para tener Datos del Framework en Javascript
-$script =  new ScriptEngine();
-
 //Inicio de Sesion
-session_start();
 date_default_timezone_set(Config::get('place'));
+session_start();
