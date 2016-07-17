@@ -1,7 +1,7 @@
 <?php
 class Where
 {
-	private $wherewobjects = "",
+    private $wherewobjects = "",
             $fields = [];
 
     private function addParam($param){
@@ -14,7 +14,7 @@ class Where
         }
     }
 
-		public function where() {
+        public function where() {
         if (func_num_args() > 0){
             if (func_num_args() == 2) {
                 $field = func_get_arg(0);
@@ -27,23 +27,23 @@ class Where
             }
             //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
 
-						if(!strpos($field,'.') === false){
-								$field = explode('.',$field);
-								for ($i=0; $i < count($field); $i++) {
-										$field[$i] = '`'.$field[$i].'`';
-								}
-								$field = implode('.',$field);
-						}else{
-								$field = '`'.$field.'`';
-						}
+                        /*if(!strpos($field,'.') === false){
+                                $field = explode('.',$field);
+                                for ($i=0; $i < count($field); $i++) {
+                                        $field[$i] = '`'.$field[$i].'`';
+                                }
+                                $field = implode('.',$field);
+                        }else{
+                                $field = '`'.$field.'`';
+                        }*/
 
-						$this->addParam($value);
+                        $this->addParam($value);
 
-						if ($this->wherewobjects == '') {
-								$this->wherewobjects = $field .' ' . $operator . ' ' . '?';
-						} else {
-								$this->wherewobjects .= ' AND ' . $field . ' ' . $operator . ' ' . '?';
-						}
+                        if ($this->wherewobjects == '') {
+                                $this->wherewobjects = $field .' ' . $operator . ' ' . '?';
+                        } else {
+                                $this->wherewobjects .= ' AND ' . $field . ' ' . $operator . ' ' . '?';
+                        }
             return $this;
         }
     }
@@ -53,7 +53,7 @@ class Where
     }
 
     public function getQuery(){
-    	return '('.$this->wherewobjects.')';
+        return '('.$this->wherewobjects.')';
     }
 
     public function orWhere() {
@@ -70,18 +70,53 @@ class Where
 
             //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
 
-						if(!strpos($field,'.') === false){
-								$field = explode('.',$field);
-								for ($i=0; $i < count($field); $i++) {
-										$field[$i] = '`'.$field[$i].'`';
-								}
-								$field = implode('.',$field);
-						}else{
-								$field = '`'.$field.'`';
-						}
+                        /*if(!strpos($field,'.') === false){
+                                $field = explode('.',$field);
+                                for ($i=0; $i < count($field); $i++) {
+                                        $field[$i] = '`'.$field[$i].'`';
+                                }
+                                $field = implode('.',$field);
+                        }else{
+                                $field = '`'.$field.'`';
+                        }*/
 
             $this->addParam($value);
-						
+
+            if ($this->wherewobjects == '') {
+                $this->wherewobjects = $field . ' ' . $operator . ' ' . '?';
+            } else {
+                $this->wherewobjects .= ' OR ' . $field . ' ' . $operator . ' ' . '?';
+            }
+            return $this;
+        }
+    }
+
+        public function xorWhere() {
+        if (func_num_args() > 0){
+            if (func_num_args() == 2) {
+                $field = func_get_arg(0);
+                $operator = '=';
+                $value = func_get_arg(1);
+            } else {
+                $field = func_get_arg(0);
+                $operator = func_get_arg(1);
+                $value = func_get_arg(2);
+            }
+
+            //$value = (is_numeric($value)) ? $value : '"' . $value . '"';
+
+                        /*if(!strpos($field,'.') === false){
+                                $field = explode('.',$field);
+                                for ($i=0; $i < count($field); $i++) {
+                                        $field[$i] = '`'.$field[$i].'`';
+                                }
+                                $field = implode('.',$field);
+                        }else{
+                                $field = '`'.$field.'`';
+                        }*/
+
+            $this->addParam($value);
+
             if ($this->wherewobjects == '') {
                 $this->wherewobjects = $field . ' ' . $operator . ' ' . '?';
             } else {
