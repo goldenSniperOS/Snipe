@@ -112,7 +112,12 @@ class DB {
         if (func_num_args() > 0){
             if(is_callable(func_get_arg(0))){
                 $wheres = new Where();
-                call_user_func_array(func_get_arg(0), [$wheres]);
+                if(null !== func_get_arg(1)){
+                    $data = func_get_arg(1);
+                    call_user_func_array(func_get_arg(0), [$wheres,$data]);
+                }else{
+                    call_user_func_array(func_get_arg(0), [$wheres]);
+                }
                 $this->sql['where'] .= ' AND '. $wheres->getQuery();
                 $this->addParam($wheres->getParams(),"where");
             }else{
@@ -125,7 +130,8 @@ class DB {
                     $operator = func_get_arg(1);
                     $value = func_get_arg(2);
                 }
-/*
+                //Buscar una Solucion para esto
+                /*
                 if(!strpos($field,'.') === false){
                     $field = explode('.',$field);
                     for ($i=0; $i < count($field); $i++) {
@@ -191,7 +197,12 @@ class DB {
         if (func_num_args() > 0){
             if(is_callable(func_get_arg(0))){
                 $wheres = new Where();
-                call_user_func_array(func_get_arg(0), [$wheres]);
+                if(null !== func_get_arg(1)){
+                    $data = func_get_arg(1);
+                    call_user_func_array(func_get_arg(0), [$wheres,$data]);
+                }else{
+                    call_user_func_array(func_get_arg(0), [$wheres]);
+                }
                 $this->sql['where'] .= ' OR '. $wheres->getQuery();
                 $this->addParam($wheres->getParams(),"where");
             }else{
