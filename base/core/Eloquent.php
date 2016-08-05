@@ -219,12 +219,20 @@ class Eloquent {
         }
     }
 
-    public static function delete($fields = array(), $id = null, $key = null) {
+    public static function delete($parameter = null, $key = null) {
+        //Parameter puede ser 2 cosas : La llave primaria del Modelo, o El array con los campos del where 
         if (!$key) {
             $key = static::$primaryKey;
         }
-        if (!DB::getInstance()->table(static::$table)->where($key, $id)->delete()) {
-            throw new Exception('Hubo un Problema Eliminando ' . get_called_class());
+        if(isset($parameter)){
+          if(is_array($parameter)){
+            $query = DB::getInstance()->table(static::$table)->where($parameter);
+          }else{
+            $query = DB::getInstance()->table(static::$table)->where($parameter,$key);
+          }
+          if (!$query->delete()) {
+              throw new Exception('Hubo un Problema Eliminando ' . get_called_class());
+          }
         }
     }
 
