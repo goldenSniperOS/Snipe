@@ -228,7 +228,7 @@ class Eloquent {
           if(is_array($parameter)){
             $query = DB::getInstance()->table(static::$table)->where($parameter);
           }else{
-            $query = DB::getInstance()->table(static::$table)->where($parameter,$key);
+            $query = DB::getInstance()->table(static::$table)->where($key,$parameter);
           }
           if (!$query->delete()) {
               throw new Exception('Hubo un Problema Eliminando ' . get_called_class());

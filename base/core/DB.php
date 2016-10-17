@@ -534,7 +534,8 @@ class DB {
             $this->sql['action'] = "DELETE";
             $query = implode(" ", $this->sql);
             //return $this;
-            return !$this->query($query)->error();
+            $this->_fields = array_merge($this->_fields['fields'],$this->_fields['where'],$this->_fields['limit']);
+            return !$this->query($query, $this->_fields)->error();
         } catch (PDOException $e) {
             die($e->getMessage());
         }
