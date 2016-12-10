@@ -13,7 +13,7 @@ $packages = require dirname(__DIR__).DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARAT
 
 if(isset($packages['modules']) && count($packages['modules']) > 0){
   foreach ($packages['modules'] as $modulo) {
-    $array = glob(__DIR__.DIRECTORY_SEPARATOR."classes".DIRECTORY_SEPARATOR.$modulo.DIRECTORY_SEPARATOR."*.php");
+    $array = glob(dirname(__DIR__).DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR."classes".DIRECTORY_SEPARATOR.$modulo.DIRECTORY_SEPARATOR."*.php");
     array_multisort(array_map('strlen', $array), $array);
     foreach ($array as $filename)
     {

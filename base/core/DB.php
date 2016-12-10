@@ -3,10 +3,10 @@
 class DB {
 
     private static $_instance = null;
-    private $_pdo,
+    private $_pdo = null,
             $_database = null,
             $_host = null,
-            $_query,
+            $_query = null,
             $_error = false,
             $_results = null,
             $_count = -1;
@@ -50,6 +50,14 @@ class DB {
         self::$_instance->_fields['fields'] = [];
         self::$_instance->_fields['where'] = [];
         self::$_instance->_fields['limit'] = [];
+
+        //Reset Database
+        self::$_instance->_database = null;
+        self::$_instance->_host = null;
+        self::$_instance->_query = null;
+        self::$_instance->_error = false;
+        self::$_instance->_results = null;
+        self::$_instance->_count = -1;
     }
 
     public static function getInstance($database = null,$host = null) {

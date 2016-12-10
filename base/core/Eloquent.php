@@ -176,7 +176,7 @@ class Eloquent {
 
     public static function orderBy($field, $direction = null) {
         $_instanceDB = DB::getInstance()->table(static::$table)->orderBy($field,$direction);
-        return $instanceDB;
+        return $_instanceDB;
     }
 
 
