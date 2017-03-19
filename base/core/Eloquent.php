@@ -63,7 +63,7 @@ class Eloquent {
     public static function where() {
         if (func_num_args() > 0){
             if(is_callable(func_get_arg(0))){
-                $_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->where(func_get_arg(0));
+                $_instanceDB = DB::getInstance()->table(static::$table)->tableLock()->where(func_get_arg(0),func_get_arg(1));
             }else{
                 if (func_num_args() == 2) {
                     $field = func_get_arg(0);

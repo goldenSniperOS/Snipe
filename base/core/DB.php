@@ -126,7 +126,12 @@ class DB {
                 }else{
                     call_user_func_array(func_get_arg(0), [$wheres]);
                 }
-                $this->sql['where'] .= ' AND '. $wheres->getQuery();
+
+                if ($this->sql['where'] == '') {
+                    $this->sql['where'] = 'WHERE '. $wheres->getQuery();
+                } else {
+                    $this->sql['where'] .= ' AND ' . $wheres->getQuery();
+                }
                 $this->addParam($wheres->getParams(),"where");
             }else{
                 if (func_num_args() == 2) {
