@@ -7,6 +7,5 @@
     "require-dev": {
         "kint-php/kint": "^2.1"
     },
-    "license": "MIT",
-    "minimum-stability": "dev"
+    "license": "MIT"
 }
