@@ -1,0 +1,12 @@
+{
+    "name": "snipe-php/snipe",
+    "description": "A php MVC framework",
+    "require": {
+        "league/plates": "^3.3"
+    },
+    "require-dev": {
+        "kint-php/kint": "^2.1"
+    },
+    "license": "MIT",
+    "minimum-stability": "dev"
+}
