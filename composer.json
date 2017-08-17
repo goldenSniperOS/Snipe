@@ -10,5 +10,10 @@
         "kint-php/kint": "^2.1"
     },
     "license": "GLP-2.0",
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    }
 }
