@@ -1,4 +1,4 @@
-<?php
+<?php namespace Snipe\Core;
 /**
 * Esta clase servira para otorgar los paths que se encuentran en base/paths.php
 */

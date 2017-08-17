@@ -1,4 +1,5 @@
-<?php
+<?php namespace Snipe\Core;
+
 class Route{
 
 	private static function setRoute($method,$route,$function){

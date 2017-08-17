@@ -47,4 +47,11 @@ return array(
       |
      */
     'vendor' => dirname(__DIR__). DIRECTORY_SEPARATOR. 'vendor',
+
+    'resources' => dirname(__DIR__). DIRECTORY_SEPARATOR. 'resources',
+
+    'external_classes' => dirname(__DIR__). DIRECTORY_SEPARATOR. 'external_classes',
+
+    'config' => dirname(__DIR__). DIRECTORY_SEPARATOR. 'config',
+    
 );

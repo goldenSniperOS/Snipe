@@ -1,10 +1,10 @@
-<?php
+<?php namespace Snipe\Core;
 
 //Example of routes
 
 //Ruta Inicial del Proyecto
 Route::get('/',function(){
-	View::render('home/index');
+	view('home/index');
 });
 
 Route::get('function',function(){

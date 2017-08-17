@@ -1,4 +1,6 @@
-<?php
+<?php namespace Snipe\App\Model;
+
+use Snipe\Core\Eloquent;
 
 /*
   |--------------------------------------------------------------------------

@@ -1,4 +1,5 @@
-<?php 
+<?php namespace Snipe\Core;
+
 class Table
 {
     private $_fields = [],

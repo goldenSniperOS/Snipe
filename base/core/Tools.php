@@ -1,4 +1,4 @@
-<?php
+<?php namespace Snipe\Core;
 
 /**
 * Esta Clase esta hecha para contener métodos para ayudar dentro de Snipe

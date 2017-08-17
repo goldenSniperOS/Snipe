@@ -1,2 +1,2 @@
 .idea/*
-app/config/app.php
+composer.lock

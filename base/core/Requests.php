@@ -1,4 +1,4 @@
-<?php
+<?php namespace Snipe\Core;
 /**
  * Libreria Extraida del usuario Xeoncross en uno de sus gists
  * https://gist.github.com/Xeoncross/2362936

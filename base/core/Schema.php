@@ -1,4 +1,5 @@
-<?php
+<?php namespace Snipe\Core;
+
 class Schema
 {
     private $_pdo,

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Snipe\Core;
 
 class Lang {
     public static function get($key) {

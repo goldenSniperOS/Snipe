@@ -1,4 +1,4 @@
-<?php
+<?php namespace Snipe\Core;
 /**
 * Esta Clase describe funciones, para mostrar valores de variables en pre
 * proximamente Mostrará errores en archivos de Snipe

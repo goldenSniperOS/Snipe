@@ -1,4 +1,4 @@
-<?php
+<?php namespace Snipe\Core;
 /**
 * Clase para setear algunas Cabeceras de Contenido header
 */

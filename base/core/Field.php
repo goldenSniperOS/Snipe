@@ -1,4 +1,4 @@
-<?php
+<?php namespace Snipe\Core;
 
 class Field
 {

@@ -1,4 +1,4 @@
-<?php
+<?php namespace Snipe\App\Controlles;
 
 /*
   |--------------------------------------------------------------------------
@@ -21,6 +21,6 @@ class Home {
             'author' => 'Snipe Framework Group.',
             'robots' => 'All'
         );
-        View::render('home/index', ['meta' => $meta]);
+        view('home/index', ['meta' => $meta]);
     }
 }

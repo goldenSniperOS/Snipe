@@ -1,4 +1,4 @@
-<?php
+<?php namespace Snipe\Core;
 /**
 *	Clase para subir archivos y crear carpetas
 *	Ejemplo en functionamiento
