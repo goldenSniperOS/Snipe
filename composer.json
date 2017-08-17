@@ -1,5 +1,6 @@
 {
     "name": "snipe-php/snipe",
+    "version": "2.0.0",
     "description": "A php MVC framework",
     "require": {
         "league/plates": "^3.3",
