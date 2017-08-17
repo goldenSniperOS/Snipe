@@ -2,10 +2,12 @@
     "name": "snipe-php/snipe",
     "description": "A php MVC framework",
     "require": {
-        "league/plates": "^3.3"
+        "league/plates": "^3.3",
+        "php": ">=5.3.0"
     },
     "require-dev": {
         "kint-php/kint": "^2.1"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "minimum-stability": "stable"
 }
