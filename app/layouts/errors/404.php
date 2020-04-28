@@ -50,6 +50,7 @@
     </p>
   </body>
   <script type="text/javascript" src="public/jquery/jquery.min.js"></script>
+  <!-- JQUERY CORAZAO ASIES -->
   <script type="text/javascript">
   $(function() {
   // The base speed per character
